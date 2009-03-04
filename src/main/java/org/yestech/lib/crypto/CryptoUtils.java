@@ -11,7 +11,6 @@ package org.yestech.lib.crypto;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +21,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 /**
- * @author $Author: $
- * @version $Revision: $
+ * Class that implements Crypto Algorithmns
  */
 public class CryptoUtils {
     final private static Logger logger = LoggerFactory.getLogger(CryptoUtils.class);

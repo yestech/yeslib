@@ -22,8 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 /**
- * @author $Author: $
- * @version $Revision: $
+ * Class that implements Message Digest Algorithmns
  */
 public class MessageDigestUtils {
     final private static Logger logger = LoggerFactory.getLogger(MessageDigestUtils.class);
