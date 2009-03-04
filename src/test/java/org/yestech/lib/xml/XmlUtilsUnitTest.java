@@ -20,7 +20,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.apache.commons.lang.StringUtils;
-import org.yestech.lib.xml.XmlUtils;
 
 import java.util.Map;
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public class XmlUtilsUnitTest {
         String json = XmlUtils.toJSon(test);
         assertNotNull(json);
         assertEquals(
-                "{\"org.yestech.notify.util.XmlUtilsUnitTest_-TestObject\":{\"param1\":\"This is a String\",\"param2\":100,\"param3\":500000000}}",
+                "{\"org.yestech.lib.xml.XmlUtilsUnitTest_-TestObject\":{\"param1\":\"This is a String\",\"param2\":100,\"param3\":500000000}}",
                 json);
     }
 
@@ -92,7 +91,7 @@ public class XmlUtilsUnitTest {
 
     @Test
     public void testFromJSon() {
-        String jsonText = "{\"org.yestech.notify.util.XmlUtilsUnitTest_-TestObject\":{\"param1\":\"This is a String\",\"param2\":100,\"param3\":500000000}}";
+        String jsonText = "{\"org.yestech.lib.xml.XmlUtilsUnitTest_-TestObject\":{\"param1\":\"This is a String\",\"param2\":100,\"param3\":500000000}}";
         TestObject test = new TestObject();
         test.setParam1("This is a String");
         test.setParam2(100);
