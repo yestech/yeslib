@@ -34,17 +34,27 @@ public class XmlUtils {
     }
 
     /**
+     * Serializes any Object to XML
+     *
+     * @param object Object to serialize
+     * @return XML serialization of the supplied object
+     */
+    public static String toXml(Object object) {
+        return toXml(object, false);
+    }
+
+    /**
      * Serializes any Object to XML Note: Annotation detection will be used when
      * called.
      *
      * @param object Object to serialize
      * @return XML serialization of the supplied object
      */
-    public static String toXml(Object object) {
+    public static String toXml(Object object, boolean annotation) {
         String result = "";
         if (object != null) {
             XStream stream = new XStream();
-            stream.autodetectAnnotations(true);
+            stream.autodetectAnnotations(annotation);
             result = stream.toXML(object);
         }
         return result;
@@ -59,12 +69,24 @@ public class XmlUtils {
      * @return The serialized list
      */
     public static String toXml(List<?> list, String listName) {
+        return toXml(list, listName, false);
+    }
+
+    /**
+     * Serializes a list to xml with a given name Note: Annotation detection
+     * will be used when called.
+     *
+     * @param list     list to serialize
+     * @param listName Name of the list
+     * @return The serialized list
+     */
+    public static String toXml(List<?> list, String listName, boolean annotation) {
 
         String result = "";
         if (list != null) {
             XStream stream = new XStream();
             // stream.registerConverter(new XStreamDateConverter(locale));
-            stream.autodetectAnnotations(true);
+            stream.autodetectAnnotations(annotation);
             stream.alias(listName, List.class);
             result = stream.toXML(list);
         }
@@ -78,9 +100,20 @@ public class XmlUtils {
      * @return JSon serialization of the supplied object
      */
     public static String toJSon(Object object) {
+        return toJSon(object, false);
+    }
+
+    /**
+     * Serializes any Object to JSon
+     *
+     * @param object Object to serialize
+     * @return JSon serialization of the supplied object
+     */
+    public static String toJSon(Object object, boolean annotation) {
         String result = "";
         if (object != null) {
             XStream stream = new XStream(new JettisonMappedXmlDriver());
+            stream.autodetectAnnotations(annotation);
             result = stream.toXML(object);
         }
         return result;
@@ -186,6 +219,7 @@ public class XmlUtils {
         T result = (T) "";
         if (StringUtils.isNotBlank(xml)) {
             XStream stream = new XStream();
+//            stream.autodetectAnnotations(true);
             result = (T) stream.fromXML(xml);
         }
         return result;
