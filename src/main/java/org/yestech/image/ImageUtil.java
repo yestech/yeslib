@@ -15,12 +15,12 @@ public final class ImageUtil
     private ImageUtil() {
     }
 
-    public static void crop (String name, InputStream in, OutputStream out,
+    public static void crop (String format, InputStream in, OutputStream out,
                              int x, int y, int width, int height) throws IOException
     {
         BufferedImage bufferedImage = ImageIO.read(in);
         BufferedImage subImage = bufferedImage.getSubimage(x, y, width, height);
-        ImageIO.write(subImage, name, out);
+        ImageIO.write(subImage, format, out);
     }
 
 
