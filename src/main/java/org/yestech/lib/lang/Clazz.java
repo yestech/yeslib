@@ -59,7 +59,7 @@ final public class Clazz {
      * @return The Instantiated Class
      * @throws RuntimeException If error happens Instantiating
      */
-    public static Object instantiateClass(String classFQN) {
+    public static <I> I instantiateClass(String classFQN) {
         return instantiateClass(getClass(classFQN));
     }
 
@@ -71,9 +71,9 @@ final public class Clazz {
      * @return The Instantiated Class
      * @throws RuntimeException If error happens Instantiating
      */
-    public static Object instantiateClass(Class clazz) {
+    public static <I> I instantiateClass(Class clazz) {
         try {
-            return clazz.newInstance();
+            return (I)clazz.newInstance();
         } catch (Exception e) {
             logger.error("Error Instantiating Class: " + clazz, e);
             throw new RuntimeException("Error Instantiating Class: " + clazz, e);
@@ -92,8 +92,7 @@ final public class Clazz {
     public static Method getMethod(String classFQN, String methodName, Class[] params) {
         try {
             Class clazz = getClass(classFQN);
-            Method method = clazz.getMethod(methodName, params);
-            return method;
+            return clazz.getMethod(methodName, params);
         } catch (Exception e) {
             logger.error("Error Loading Method: " + methodName, e);
             throw new RuntimeException("Error Loading Method: " + methodName, e);
