@@ -59,8 +59,9 @@ final public class Clazz {
      * @return The Instantiated Class
      * @throws RuntimeException If error happens Instantiating
      */
+    @SuppressWarnings("unchecked")
     public static <I> I instantiateClass(String classFQN) {
-        return instantiateClass(getClass(classFQN));
+        return (I)instantiateClass(getClass(classFQN));
     }
 
     /**
@@ -71,6 +72,7 @@ final public class Clazz {
      * @return The Instantiated Class
      * @throws RuntimeException If error happens Instantiating
      */
+    @SuppressWarnings("unchecked")
     public static <I> I instantiateClass(Class clazz) {
         try {
             return (I)clazz.newInstance();
