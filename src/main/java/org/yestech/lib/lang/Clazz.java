@@ -10,6 +10,7 @@ package org.yestech.lib.lang;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yestech.lib.cache.InMemoryReflectionCache;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -21,8 +22,6 @@ import java.util.HashMap;
 final public class Clazz {
     final private static Logger logger = LoggerFactory.getLogger(Clazz.class);
 
-    final private static HashMap<String, Class> classCache = new HashMap<String, Class>();
-
     private Clazz() {
         super();
     }
@@ -32,22 +31,12 @@ final public class Clazz {
      * Looks up and retrieves an Initialized class.  This means that the
      * class with only load it's static block!
      *
-     * @param classFQN FQN of the class to initialize
+     * @param classFqn FQN of the class to initialize
      * @return The initialized Class
      * @throws RuntimeException If error happens Loading or Initializing
      */
-    public static Class getClass(String classFQN) {
-        Class clazz = classCache.get(classFQN);
-        if (clazz == null) {
-            try {
-                clazz = Class.forName(classFQN);
-                classCache.put(classFQN, clazz);
-            } catch (Exception e) {
-                logger.error("Error Loading and Initializing Class: " + classFQN, e);
-                throw new RuntimeException("Error Loading and " +
-                        "Initializing Class: " + classFQN, e);
-            }
-        }
+    public static Class getClass(String classFqn) {
+        Class clazz = InMemoryReflectionCache.getClass(classFqn);
         return clazz;
     }
 
@@ -92,14 +81,7 @@ final public class Clazz {
      * @throws RuntimeException If error happens Loading Method
      */
     public static Method getMethod(String classFQN, String methodName, Class[] params) {
-        try {
-            Class clazz = getClass(classFQN);
-            return clazz.getMethod(methodName, params);
-        } catch (Exception e) {
-            logger.error("Error Loading Method: " + methodName, e);
-            throw new RuntimeException("Error Loading Method: " + methodName, e);
-        }
-
+        return InMemoryReflectionCache.getMethod(classFQN, methodName, params);
     }
 
     /**
