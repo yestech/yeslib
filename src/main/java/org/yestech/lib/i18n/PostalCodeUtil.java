@@ -23,6 +23,8 @@ public final class PostalCodeUtil
     }
 
     public static boolean isValid(String code, CountryEnum countryEnum) {
+        if (code == null) return false;
+        
         //noinspection SimplifiableIfStatement
         if (countryEnum == CountryEnum.UNITED_STATES) {
             return isValidUS(code);
@@ -31,6 +33,7 @@ public final class PostalCodeUtil
     }
 
     public static boolean isValidUS(String code) {
+        if (code == null) return false;
         Matcher matcher = US_SHORT.matcher(code);
         if (matcher.matches()) {
             return true;
