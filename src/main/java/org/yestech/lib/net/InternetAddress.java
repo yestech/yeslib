@@ -19,6 +19,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
+ * Utility methods that work on Ip Addresses.
+ *
  * @author Artie Copeland
  * @version $Revision: $
  */
