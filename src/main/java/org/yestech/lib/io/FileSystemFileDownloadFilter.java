@@ -16,7 +16,7 @@ package org.yestech.lib.io;
 import static org.apache.commons.io.FileUtils.openInputStream;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.io.IOUtils.copy;
-import static org.apache.commons.lang.BooleanUtils.toBooleanObject;
+import static org.apache.commons.lang.BooleanUtils.toBoolean;
 import org.apache.commons.lang.StringUtils;
 import static org.apache.commons.lang.StringUtils.defaultString;
 import org.slf4j.Logger;
@@ -37,7 +37,8 @@ import static java.lang.System.getProperty;
  * <li>deleteAfterDownload - whether to delete the file after successful download (default : false)</li>
  * <li>baseDirectory - base directory where to find the files (default : java.io.tmpdir system property) </li>
  * </ul>
- * 
+ * The request parameter must be: file
+ *  
  * @author Artie Copeland
  * @version $Revision: $
  */
@@ -49,8 +50,8 @@ public class FileSystemFileDownloadFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        deleteAfterDownload = toBooleanObject(filterConfig.getInitParameter("deleteAfterDownload"),
-                "true", "false", "false");
+        deleteAfterDownload = toBoolean(defaultString(filterConfig.getInitParameter("deleteAfterDownload"), "false"),
+                "true", "false");
         String tempBaseDir = defaultString(filterConfig.getInitParameter("baseDirectory"), getProperty("java.io.tmpdir"));
         baseDirectory = new File(tempBaseDir);
     }
@@ -89,6 +90,7 @@ public class FileSystemFileDownloadFilter implements Filter {
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
+                throw new RuntimeException(e);
             }
             finally {
                 closeQuietly(inputStream);
