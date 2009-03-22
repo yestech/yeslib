@@ -16,17 +16,18 @@ package org.yestech.lib.currency;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Locale;
+import java.util.Currency;
 
 /**
+ * Represents an immutable monetary value.
+ * 
  * @author Artie Copeland
  * @version $Revision: $
  */
-public interface IMoney extends Serializable {
-    BigDecimal getValue();
+public interface IMoney extends Serializable, Comparable<IMoney> {
+    BigDecimal getAmount();
 
-    void setValue(BigDecimal value);
+    Currency getCurreny();
 
-    Locale getCurrency();
-
-    void setCurrency(Locale currency);
+    Locale getLocale();
 }
