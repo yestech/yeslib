@@ -14,6 +14,8 @@
 package org.yestech.lib.util;
 
 /**
+ * Represents a tuple of 2
+ *
  * @author Artie Copeland
  * @version $Revision: $
  */
