@@ -16,15 +16,16 @@ package org.yestech.lib.currency;
 import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.Currency;
+import java.io.Serializable;
 
 /**
- * Default Implementation for an {@link IMoney}. By default it assumes {@link Locale#US} and
+ * Represents an immutable monetary value. By default it assumes {@link Locale#US} and
  * the corresponding Currency.
  * 
  * @author Artie Copeland
  * @version $Revision: $
  */
-public class Money implements IMoney {
+public class Money implements Serializable, Comparable<Money> {
     private BigDecimal amount = BigDecimal.ZERO;
     private Locale locale;
     private Currency curreny;
@@ -89,7 +90,7 @@ public class Money implements IMoney {
     }
 
     @Override
-    public int compareTo(IMoney comparable) {
+    public int compareTo(Money comparable) {
         return getAmount().compareTo(comparable.getAmount());
     }
 }

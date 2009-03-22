@@ -20,50 +20,50 @@ import java.math.BigDecimal;
  * @version $Revision: $
  */
 public class CurrencyUtils {
-    public static IMoney add(IMoney leftSide, IMoney rightSide) {
-        IMoney addition = null;
+    public static Money add(Money leftSide, Money rightSide) {
+        Money addition = null;
         validationCheck(leftSide, rightSide);
         addition = new Money(leftSide.getAmount().add(rightSide.getAmount()), leftSide.getLocale());
         return addition;
     }
 
-    public static IMoney subtract(IMoney leftSide, IMoney rightSide) {
-        IMoney addition = null;
+    public static Money subtract(Money leftSide, Money rightSide) {
+        Money addition = null;
         validationCheck(leftSide, rightSide);
         addition = new Money(leftSide.getAmount().subtract(rightSide.getAmount()), leftSide.getLocale());
         return addition;
     }
 
-    public static IMoney divide(IMoney leftSide, IMoney rightSide) {
-        IMoney addition = null;
+    public static Money divide(Money leftSide, Money rightSide) {
+        Money addition = null;
         validationCheck(leftSide, rightSide);
         divideByZeroCheck(rightSide);
         addition = new Money(leftSide.getAmount().divide(rightSide.getAmount()), leftSide.getLocale());
         return addition;
     }
 
-    public static IMoney divide(IMoney leftSide, IMoney rightSide, int roundMode) {
-        IMoney addition = null;
+    public static Money divide(Money leftSide, Money rightSide, int roundMode) {
+        Money addition = null;
         validationCheck(leftSide, rightSide);
         divideByZeroCheck(rightSide);
         addition = new Money(leftSide.getAmount().divide(rightSide.getAmount(), roundMode), leftSide.getLocale());
         return addition;
     }
 
-    private static void divideByZeroCheck(IMoney rightSide) {
+    private static void divideByZeroCheck(Money rightSide) {
         if (rightSide.getAmount().equals(BigDecimal.ZERO)) {
             throw new CurrencyException("cant divide by zero");
         }
     }
 
-    public static IMoney multiple(IMoney leftSide, IMoney rightSide) {
-        IMoney addition = null;
+    public static Money multiple(Money leftSide, Money rightSide) {
+        Money addition = null;
         validationCheck(leftSide, rightSide);
         addition = new Money(leftSide.getAmount().multiply(rightSide.getAmount()), leftSide.getLocale());
         return addition;
     }
 
-    private static void validationCheck(IMoney leftSide, IMoney rightSide) {
+    private static void validationCheck(Money leftSide, Money rightSide) {
         if (leftSide == null || rightSide == null) {
             throw new CurrencyException("cant add null value");
         }

@@ -44,28 +44,28 @@ public class CurrencyUtilsUnitTest {
 
     @Test
     public void testAddition() {
-        IMoney money = new Money(new BigDecimal("2"));
-        IMoney resultMoney = CurrencyUtils.add(new Money(BigDecimal.ONE), new Money(BigDecimal.ONE));
+        Money money = new Money(new BigDecimal("2"));
+        Money resultMoney = CurrencyUtils.add(new Money(BigDecimal.ONE), new Money(BigDecimal.ONE));
         assertEquals(money, resultMoney);
         assertEquals("$", resultMoney.getCurreny().getSymbol());
     }
     @Test
     public void testSubtrction() {
-        IMoney resultMoney = CurrencyUtils.subtract(new Money(BigDecimal.ONE), new Money(BigDecimal.ONE));
+        Money resultMoney = CurrencyUtils.subtract(new Money(BigDecimal.ONE), new Money(BigDecimal.ONE));
         assertEquals(new Money(BigDecimal.ZERO), resultMoney);
         assertEquals("$", resultMoney.getCurreny().getSymbol());
     }
     @Test
     public void testMultiply() {
-        IMoney resultMoney = CurrencyUtils.multiple(new Money(BigDecimal.TEN), new Money(BigDecimal.ONE));
+        Money resultMoney = CurrencyUtils.multiple(new Money(BigDecimal.TEN), new Money(BigDecimal.ONE));
         assertEquals(new Money(BigDecimal.TEN), resultMoney);
         assertEquals("$", resultMoney.getCurreny().getSymbol());
     }
 
     @Test
     public void testDivide() {
-        IMoney money = new Money(new BigDecimal("1"));
-        IMoney resultMoney = CurrencyUtils.divide(new Money(BigDecimal.ONE), new Money(BigDecimal.ONE));
+        Money money = new Money(new BigDecimal("1"));
+        Money resultMoney = CurrencyUtils.divide(new Money(BigDecimal.ONE), new Money(BigDecimal.ONE));
         assertEquals(money, resultMoney);
         assertEquals("$", resultMoney.getCurreny().getSymbol());
     }
@@ -82,8 +82,8 @@ public class CurrencyUtilsUnitTest {
 
     @Test
     public void testDivideWithRound() {
-        IMoney money = new Money(new BigDecimal("0.85"));
-        IMoney resultMoney = CurrencyUtils.divide(new Money(new BigDecimal("1.70")), new Money(new BigDecimal("2.00")), BigDecimal.ROUND_UP);
+        Money money = new Money(new BigDecimal("0.85"));
+        Money resultMoney = CurrencyUtils.divide(new Money(new BigDecimal("1.70")), new Money(new BigDecimal("2.00")), BigDecimal.ROUND_UP);
         assertEquals(money, resultMoney);
         assertEquals("$", resultMoney.getCurreny().getSymbol());
     }
