@@ -13,15 +13,18 @@
  */
 package org.yestech.lib.currency;
 
-import java.math.BigDecimal;
-import java.util.Locale;
-import java.util.Currency;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Currency;
+import java.util.Locale;
 
 /**
  * Represents an immutable monetary value. By default it assumes {@link Locale#US} and
  * the corresponding Currency.
- * 
+ *
  * @author Artie Copeland
  * @version $Revision: $
  */
@@ -30,20 +33,60 @@ public class Money implements Serializable, Comparable<Money> {
     private Locale locale;
     private Currency curreny;
 
+    public Money(double amount) {
+        this(amount, Locale.US);
+    }
+
+    public Money(double amount, Locale locale) {
+        if (amount < 0) {
+            throw new CurrencyException("money amount must be a positive number");
+        }
+        if (locale == null) {
+            throw new CurrencyException("can't have a null locale");
+        }
+        this.amount = new BigDecimal(amount);
+        this.locale = locale;
+        this.curreny = Currency.getInstance(locale);
+    }
+
+    public Money(String amount) {
+        this(amount, Locale.US);
+    }
+
+    public Money(String amount, Locale locale) {
+        BigDecimal tmpAmount;
+        if (StringUtils.isBlank(amount) || !NumberUtils.isNumber(amount)) {
+            throw new CurrencyException("money amount must be a positive number");
+        } else {
+            tmpAmount = new BigDecimal(amount);
+            validateAmount(tmpAmount);
+        }
+        if (locale == null) {
+            throw new CurrencyException("can't have a null locale");
+        }
+        this.amount = tmpAmount;
+        this.locale = locale;
+        this.curreny = Currency.getInstance(locale);
+    }
+
     public Money(BigDecimal amount) {
         this(amount, Locale.US);
     }
 
     public Money(BigDecimal amount, Locale locale) {
-        if (amount == null || amount.doubleValue() < BigDecimal.ZERO.doubleValue()) {
-            throw new CurrencyException("can't have a null of negative money amount");
-        }
+        validateAmount(amount);
         if (locale == null) {
-            throw new CurrencyException("can't have a null locale");            
+            throw new CurrencyException("can't have a null locale");
         }
         this.amount = amount;
         this.locale = locale;
         this.curreny = Currency.getInstance(locale);
+    }
+
+    private void validateAmount(BigDecimal amount) {
+        if (amount == null || amount.doubleValue() < BigDecimal.ZERO.doubleValue()) {
+            throw new CurrencyException("can't have a null of negative money amount");
+        }
     }
 
     public BigDecimal getAmount() {
