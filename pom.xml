@@ -168,6 +168,10 @@
             <id>yestech.thirdparty</id>
             <url>http://repo.yestech.org/content/repositories/thirdparty</url>
         </repository>
+        <repository>
+            <id>caucho</id>
+            <url>http://caucho.com/m2/</url>
+        </repository>
     </repositories>
     <distributionManagement>
         <repository>
