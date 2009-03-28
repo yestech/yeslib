@@ -14,14 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * A collection of response processing utilities, which are shared between 2 or more filters
+ * A collection of response processing utilities
  *
  * @author Artie Copeland
  * @version $Revision: $
  */
-public final class ResponseUtil {
+public final class ResponseUtils {
 
-    final private static Logger logger = LoggerFactory.getLogger(ResponseUtil.class);
+    final private static Logger logger = LoggerFactory.getLogger(ResponseUtils.class);
     
     /**
      * Gzipping an empty file or stream always results in a 20 byte output
@@ -37,7 +37,7 @@ public final class ResponseUtil {
     /**
      * Utility class. No public constructor.
      */
-    private ResponseUtil() {
+    private ResponseUtils() {
         //noop
     }
 
