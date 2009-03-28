@@ -10,9 +10,8 @@ package org.yestech.lib.web.filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yestech.lib.web.GenericResponseWrapper;
-import static org.yestech.lib.web.RequestUtils.acceptsEncoding;
-import static org.yestech.lib.web.RequestUtils.isIncluded;
-import org.yestech.lib.web.ResponseUtils;
+import static org.yestech.lib.web.RequestUtils.*;
+import static org.yestech.lib.web.ResponseUtils.*;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -69,14 +68,14 @@ public class CompressionFilter implements Filter {
 
             //Saneness checks
             byte[] compressedBytes = compressed.toByteArray();
-            boolean shouldGzippedBodyBeZero = ResponseUtils.shouldGzippedBodyBeZero(compressedBytes, request);
-            boolean shouldBodyBeZero = ResponseUtils.shouldBodyBeZero(request, wrapper.getStatus());
+            boolean shouldGzippedBodyBeZero = shouldGzippedBodyBeZero(compressedBytes, request);
+            boolean shouldBodyBeZero = shouldBodyBeZero(request, wrapper.getStatus());
             if (shouldGzippedBodyBeZero || shouldBodyBeZero) {
                 compressedBytes = new byte[0];
             }
 
             // Write the zipped body
-            ResponseUtils.addGzipHeader(response);
+            addGzipHeader(response);
             response.setContentLength(compressedBytes.length);
 
 
