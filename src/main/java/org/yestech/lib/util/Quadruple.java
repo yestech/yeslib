@@ -13,12 +13,15 @@
  */
 package org.yestech.lib.util;
 
+import javax.persistence.Embeddable;
+
 /**
  * Represents a tuple of 4
  *
  * @author Artie Copeland
  * @version $Revision: $
  */
+@Embeddable
 public class Quadruple<T1, T2, T3, T4> implements ITuple {
     private T1 first;
     private T2 second;

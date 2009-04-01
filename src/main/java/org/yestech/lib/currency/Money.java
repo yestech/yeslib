@@ -16,6 +16,7 @@ package org.yestech.lib.currency;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -28,6 +29,7 @@ import java.util.Locale;
  * @author Artie Copeland
  * @version $Revision: $
  */
+@Embeddable
 public class Money implements Serializable, Comparable<Money> {
     private BigDecimal amount = BigDecimal.ZERO;
     private Locale locale;

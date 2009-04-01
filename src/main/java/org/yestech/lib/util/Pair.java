@@ -13,12 +13,15 @@
  */
 package org.yestech.lib.util;
 
+import javax.persistence.Embeddable;
+
 /**
  * Represents a tuple of 2
  *
  * @author Artie Copeland
  * @version $Revision: $
  */
+@Embeddable
 public class Pair<T1, T2> implements ITuple {
     private T1 first;
     private T2 second;
