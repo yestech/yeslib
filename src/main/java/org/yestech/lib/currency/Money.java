@@ -29,7 +29,6 @@ import java.util.Locale;
  * @author Artie Copeland
  * @version $Revision: $
  */
-@Embeddable
 public class Money implements Serializable, Comparable<Money> {
     private BigDecimal amount = BigDecimal.ZERO;
     private Locale locale;

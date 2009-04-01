@@ -13,15 +13,12 @@
  */
 package org.yestech.lib.util;
 
-import javax.persistence.Embeddable;
-
 /**
  * Represents a tuple of 3
  *
  * @author Artie Copeland
  * @version $Revision: $
  */
-@Embeddable
 public class Triple<T1, T2, T3> implements ITuple {
     private T1 first;
     private T2 second;
