@@ -12,6 +12,8 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -51,9 +53,21 @@ public class XmlUtils {
      * @return XML serialization of the supplied object
      */
     public static String toXml(Object object, boolean annotation) {
+        return toXml(object, DateTimeFormat.longDateTime(), annotation);
+    }
+
+    /**
+     * Serializes any Object to XML Note: Annotation detection will be used when
+     * called.
+     *
+     * @param object Object to serialize
+     * @return XML serialization of the supplied object
+     */
+    public static String toXml(Object object, DateTimeFormatter formatter, boolean annotation) {
         String result = "";
         if (object != null) {
             XStream stream = new XStream();
+            stream.registerConverter(new JodaDateTimeConverter(formatter));
             stream.autodetectAnnotations(annotation);
             result = stream.toXML(object);
         }
@@ -110,9 +124,20 @@ public class XmlUtils {
      * @return JSon serialization of the supplied object
      */
     public static String toJSon(Object object, boolean annotation) {
+        return toJSon(object, DateTimeFormat.longDateTime(), annotation);
+    }
+
+    /**
+     * Serializes any Object to JSon
+     *
+     * @param object Object to serialize
+     * @return JSon serialization of the supplied object
+     */
+    public static String toJSon(Object object, DateTimeFormatter formatter, boolean annotation) {
         String result = "";
         if (object != null) {
             XStream stream = new XStream(new JettisonMappedXmlDriver());
+            stream.registerConverter(new JodaDateTimeConverter(formatter));
             stream.autodetectAnnotations(annotation);
             result = stream.toXML(object);
         }
