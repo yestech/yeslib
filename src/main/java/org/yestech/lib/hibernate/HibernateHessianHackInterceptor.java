@@ -32,14 +32,22 @@ public class HibernateHessianHackInterceptor implements MethodInterceptor
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable
     {
-
-        Object o = invocation.proceed();
-        if (o != null)
+        try
         {
-            logger.debug("output: " + o.toString());
-        }
-        return o;
+            Object o = invocation.proceed();
 
+
+            if (o != null)
+            {
+                logger.debug("output: " + o.toString());
+            }
+            return o;
+        }
+        catch (Throwable throwable)
+        {
+            logger.error(throwable.getMessage(), throwable);
+            throw throwable;
+        }
     }
 
 }
