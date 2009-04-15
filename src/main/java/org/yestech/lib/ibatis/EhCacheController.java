@@ -22,6 +22,8 @@ import java.util.Properties;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Cache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -37,7 +39,8 @@ import net.sf.ehcache.Cache;
  * &lt;TypeAlias&gt; declaration, see iBatis documentation on how to do this.
  */
 public class EhCacheController implements CacheController {
-
+    final private static Logger logger = LoggerFactory.getLogger(EhCacheController.class);
+    
     /** The EhCache CacheManager. */
     private CacheManager cacheManager;
 
@@ -57,9 +60,14 @@ public class EhCacheController implements CacheController {
      */
     public Object getObject(CacheModel cacheModel, Object key) {
         Object result = null;
-        Element element = getCache(cacheModel).get(key);
-        if (element != null) {
-            result = element.getObjectValue();
+        try {
+            Element element = getCache(cacheModel).get(key);
+            if (element != null) {
+                result = element.getObjectValue();
+            }
+        }
+        catch(Exception e) {
+            logger.debug("cache miss, gonna hit ibatis");
         }
         return result;
 
@@ -103,8 +111,7 @@ public class EhCacheController implements CacheController {
      */
     private Cache getCache(CacheModel cacheModel) {
         String cacheName = cacheModel.getId();
-        Cache cache = cacheManager.getCache(cacheName);
-        return cache;
+        return cacheManager.getCache(cacheName);
     }
 
     /**
