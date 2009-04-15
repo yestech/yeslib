@@ -279,17 +279,19 @@ public class XmlUtils {
     /**
      * Deserializes any XML to Object
      *
+     * @param result Object of deserialization
      * @param xml Object to deserialize
      * @return Object from xml
      */
     @SuppressWarnings("unchecked")
     public static <T> T fromXmlJaxb(Object result, String xml) {
-        return fromXmlJaxb(result.getClass(), xml);
+        return (T)fromXmlJaxb(result.getClass(), xml);
     }
 
     /**
      * Deserializes any XML to Object
      *
+     * @param resultClass Class of deserialization
      * @param xml Object to deserialize
      * @return Object from xml
      */
