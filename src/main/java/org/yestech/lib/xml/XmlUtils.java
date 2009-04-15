@@ -18,10 +18,16 @@ import org.joda.time.format.DateTimeFormat;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.Marshaller;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 /**
  * Utility class for XML
@@ -33,6 +39,26 @@ public class XmlUtils {
         if (logger.isDebugEnabled()) {
             callbackLogger.debug("\nXML Dump Results: \n" + parse(reader) + "\n");
         }
+    }
+
+    /**
+     * Serializes any Object to XML
+     *
+     * @param object Object to serialize
+     * @return XML serialization of the supplied object
+     */
+    public static String toXmlJaxb(Object object) {
+        String result = "";
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            StringWriter writer = new StringWriter();
+            marshaller.marshal(object, writer);
+            result = writer.toString();
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 
     /**
@@ -251,6 +277,38 @@ public class XmlUtils {
     }
 
     /**
+     * Deserializes any XML to Object
+     *
+     * @param xml Object to deserialize
+     * @return Object from xml
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T fromXmlJaxb(Object result, String xml) {
+        return fromXmlJaxb(result.getClass(), xml);
+    }
+
+    /**
+     * Deserializes any XML to Object
+     *
+     * @param xml Object to deserialize
+     * @return Object from xml
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T fromXmlJaxb(Class resultClass, String xml) {
+        T result = null;
+        if (StringUtils.isNotBlank(xml)) {
+            try {
+                JAXBContext jaxbContext = JAXBContext.newInstance(resultClass);
+                Unmarshaller marshaller = jaxbContext.createUnmarshaller();
+                result = (T) marshaller.unmarshal(new StringReader(xml));
+            } catch (JAXBException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return result;
+    }
+
+    /**
      * Deserializes any XML to Object. Using an Alias mapping that will replace
      * the any instance of Class with the key String in the XML. Format of the
      * alias mapping:
@@ -426,5 +484,7 @@ public class XmlUtils {
             result.append("xmlns:").append(prefix).append("='").append(uri)
                     .append("'");
     }
+
+
 
 }
