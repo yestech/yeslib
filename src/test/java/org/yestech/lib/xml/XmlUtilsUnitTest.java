@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.apache.commons.lang.StringUtils;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,6 +91,26 @@ public class XmlUtilsUnitTest {
     }
 
     @Test
+    public void testToXmlUsingJaxb() {
+        TestObject test = new TestObject();
+        test.setParam1("This is a String");
+        test.setParam2(100);
+        test.setParam3(500000000);
+        String xml = XmlUtils.toXmlJaxb(test);
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><testObject><param1>This is a String</param1><param2>100</param2><param3>500000000</param3></testObject>", xml);
+    }
+
+    @Test
+    public void testFromXmlUsingJaxb() {
+        TestObject test = new TestObject();
+        test.setParam1("This is a String");
+        test.setParam2(100);
+        test.setParam3(500000000);
+        TestObject result = XmlUtils.fromXmlJaxb(TestObject.class,"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><testObject><param1>This is a String</param1><param2>100</param2><param3>500000000</param3></testObject>");
+        assertEquals(test, result);
+    }
+
+    @Test
     public void testFromJSon() {
         String jsonText = "{\"org.yestech.lib.xml.XmlUtilsUnitTest_-TestObject\":{\"param1\":\"This is a String\",\"param2\":100,\"param3\":500000000}}";
         TestObject test = new TestObject();
@@ -101,6 +122,7 @@ public class XmlUtilsUnitTest {
         assertEquals(test, json);
     }
 
+    @XmlRootElement
     private static class TestObject {
         private String param1;
         private int param2;
