@@ -13,9 +13,9 @@
  */
 package org.yestech.lib.ibatis;
 
-import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
-import com.ibatis.sqlmap.client.extensions.ResultGetter;
 import com.ibatis.sqlmap.client.extensions.ParameterSetter;
+import com.ibatis.sqlmap.client.extensions.ResultGetter;
+import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 
 import java.sql.SQLException;
 
@@ -35,8 +35,7 @@ public class YesNoBooleanTypeHandler implements TypeHandlerCallback {
         } else if (NO.equalsIgnoreCase(s)) {
             return new Boolean(false);
         } else {
-            throw new SQLException(
-                    "Unexpected value " + s + " found where " + YES + " or " + NO + " was expected.");
+            return s;
         }
     }
 
@@ -56,7 +55,7 @@ public class YesNoBooleanTypeHandler implements TypeHandlerCallback {
         } else if (NO.equalsIgnoreCase(s)) {
             return new Boolean(false);
         } else {
-            throw new RuntimeException("Unexpected value " + s + " found where " + YES + " or " + NO + " was expected.");
+            return s;
         }
     }
 }
