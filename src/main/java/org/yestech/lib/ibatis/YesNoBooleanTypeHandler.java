@@ -18,6 +18,9 @@ import com.ibatis.sqlmap.client.extensions.ResultGetter;
 import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 
 import java.sql.SQLException;
+import java.sql.Types;
+
+import org.apache.commons.lang.BooleanUtils;
 
 /**
  * @author Artie Copeland
@@ -41,11 +44,17 @@ public class YesNoBooleanTypeHandler implements TypeHandlerCallback {
 
     public void setParameter(ParameterSetter setter, Object parameter)
             throws SQLException {
-        boolean b = ((Boolean) parameter).booleanValue();
-        if (b) {
-            setter.setString(YES);
+        if (parameter == null) {
+            setter.setNull(Types.VARCHAR);
+        } else if (parameter instanceof Boolean) {
+            boolean b = (Boolean) parameter;
+            if (b) {
+                setter.setString(YES);
+            } else {
+                setter.setString(NO);
+            }
         } else {
-            setter.setString(NO);
+            setter.setString(parameter.toString());
         }
     }
 
