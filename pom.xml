@@ -147,6 +147,11 @@
             <version>1.0.2.GA</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search</artifactId>
+            <version>3.1.0.GA</version>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
