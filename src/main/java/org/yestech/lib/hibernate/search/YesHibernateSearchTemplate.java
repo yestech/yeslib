@@ -269,6 +269,25 @@ public class YesHibernateSearchTemplate extends HibernateAccessor implements Yes
     }
 
     /**
+     * Performs a Search.
+     *
+     * @param query
+     * @param searchClass
+     * @param <T>
+     * @return
+     */
+    public <T> List<T> search(final org.apache.lucene.search.Query query, final Class... searchClass) {
+        return (List<T>) executeWithNativeSession(new HibernateSearchCallback() {
+            public Object doInHibernate(Session session) throws HibernateException {
+                FullTextSession fullTextSession = Search.getFullTextSession(session);
+                org.hibernate.Query hibernateQuery = fullTextSession.createFullTextQuery(query, searchClass);
+                return hibernateQuery.list();
+            }
+        });
+
+    }
+
+    /**
      * Performs a Search with a default analyzer of {@link org.apache.lucene.analysis.standard.StandardAnalyzer}.
      * 
      * @param searchText
@@ -282,6 +301,19 @@ public class YesHibernateSearchTemplate extends HibernateAccessor implements Yes
     }
 
     /**
+     * Performs a Search with a default analyzer of {@link org.apache.lucene.analysis.standard.StandardAnalyzer}.
+     *
+     * @param searchText
+     * @param searchClass
+     * @param fields
+     * @param <T>
+     * @return
+     */
+    public <T> List<T> search(final String searchText, final Class[] searchClass, final String... fields) {
+        return search(searchText, searchClass, new StandardAnalyzer(), fields);
+    }
+
+    /**
      * 
      * @param searchText
      * @param searchClass
@@ -291,6 +323,26 @@ public class YesHibernateSearchTemplate extends HibernateAccessor implements Yes
      * @return
      */
     public <T> List<T> search(final String searchText, final Class searchClass, final Analyzer analyzer, final String... fields) {
+        QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
+        org.apache.lucene.search.Query query;
+        try {
+            query = parser.parse(searchText);
+        } catch (ParseException e) {
+            throw new RuntimeException("Error parsing search text: " + searchText, e);
+        }
+        return search(query, searchClass);
+    }
+
+    /**
+     *
+     * @param searchText
+     * @param searchClass
+     * @param analyzer
+     * @param fields
+     * @param <T>
+     * @return
+     */
+    public <T> List<T> search(final String searchText, final Class[] searchClass, final Analyzer analyzer, final String... fields) {
         QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
         org.apache.lucene.search.Query query;
         try {

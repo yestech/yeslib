@@ -31,4 +31,10 @@ public interface YesHibernateSearchOperations {
     <T> List<T> search(String searchText, Class searchClass, String... fields);
 
     <T> List<T> search(String searchText, Class searchClass, Analyzer analyzer, String... fields);
+
+    <T> List<T> search(org.apache.lucene.search.Query query, Class... searchClass);
+
+    <T> List<T> search(String searchText, Class[] searchClass, String... fields);
+
+    <T> List<T> search(String searchText, Class[] searchClass, Analyzer analyzer, String... fields);
 }
