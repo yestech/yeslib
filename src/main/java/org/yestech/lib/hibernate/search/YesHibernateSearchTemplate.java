@@ -128,7 +128,7 @@ public class YesHibernateSearchTemplate extends HibernateAccessor implements Yes
      * @throws org.springframework.dao.DataAccessException
      *          in case of Hibernate errors
      */
-    protected Object doExecute(HibernateSearchCallback action, boolean enforceNewSession, boolean enforceNativeSession)
+    public Object doExecute(HibernateSearchCallback action, boolean enforceNewSession, boolean enforceNativeSession)
             throws DataAccessException {
 
         Assert.notNull(action, "Callback object must not be null");

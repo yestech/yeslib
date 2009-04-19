@@ -13,9 +13,22 @@
  */
 package org.yestech.lib.hibernate.search;
 
+import org.springframework.dao.DataAccessException;
+import org.apache.lucene.analysis.Analyzer;
+
+import java.util.List;
+
 /**
  * @author Artie Copeland
  * @version $Revision: $
  */
 public interface YesHibernateSearchOperations {
+    Object doExecute(HibernateSearchCallback action, boolean enforceNewSession, boolean enforceNativeSession)
+            throws DataAccessException;
+
+    <T> List<T> search(org.apache.lucene.search.Query query, Class searchClass);
+
+    <T> List<T> search(String searchText, Class searchClass, String... fields);
+
+    <T> List<T> search(String searchText, Class searchClass, Analyzer analyzer, String... fields);
 }
