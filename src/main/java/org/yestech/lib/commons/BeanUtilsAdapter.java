@@ -19,7 +19,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A simple adapter for bean utils the generifies and wraps the exceptions
+ * A simple adapter for bean utils the generifies and wraps the exceptions in runtime exceptions.
+ *
  * @author Artie Copeland
  * @version $Revision: $
  */
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
 final public class BeanUtilsAdapter {
     final private static Logger logger = LoggerFactory.getLogger(BeanUtilsAdapter.class);
 
-    public <B> B cloneBean(Object bean) {
+    public static <B> B cloneBean(Object bean) {
         try {
             return (B)BeanUtils.cloneBean(bean);
         } catch (Exception e) {
