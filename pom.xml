@@ -164,6 +164,11 @@
             <version>3.0-public_review</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.8.0</version>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
