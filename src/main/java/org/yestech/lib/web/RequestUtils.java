@@ -16,6 +16,7 @@ package org.yestech.lib.web;
 import static org.yestech.lib.util.LoggingUtils.logRequestHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
@@ -95,4 +96,23 @@ final public class RequestUtils {
             }
         }
         return false;
-    }}
+    }
+
+    /**
+     * Trys to resolve an clients ip address first by last item in "X-Forwarded-For" HTTP header.
+     * If that fails then use {@link javax.servlet.http.HttpServletRequest#getRemoteAddr()}.
+     *  
+     * @param request HttpRequest
+     * @return Ip Address
+     */
+    public static String resolveUserIpAddress(HttpServletRequest request) {
+        String endUserIp = request.getHeader("X-Forwarded-For");
+        String[] ips = StringUtils.split(endUserIp, ",");
+        if (ips != null && ips.length > 0) {
+            endUserIp = ips[ips.length - 1];
+        } else {
+            endUserIp = request.getRemoteAddr();
+        }
+        return endUserIp.trim();
+    }
+}
