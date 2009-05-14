@@ -105,6 +105,57 @@ public class MessageDigestUtils {
         return DigestUtils.md5Hex(barray);
     }
 
+    /**
+     * Take a file  and return its sha1 SHA1hash as a 40 hex digit string. If the file is null then a null hash is returned.
+     *
+     * @param file
+     * @return the SHA1
+     */
+    public static String sha1Hash(File file) {
+        if (file == null) {
+            return null;
+        }
+        try {
+            return sha1Hash(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Take an InputStream and return its sha1 SHA1hash as a 40 hex digit string. If the stream is null then a null hash is returned.
+     *
+     * @param stream
+     * @return the SHA1
+     */
+    public static String sha1Hash(InputStream stream) {
+        if (stream == null) {
+            return null;
+        }
+        BufferedInputStream bis = new BufferedInputStream(stream);
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
+            byte[] buffer = new byte[16384];
+            int bytesRead = -1;
+            while ((bytesRead = bis.read(buffer, 0, buffer.length)) != -1) {
+                messageDigest.update(buffer, 0, bytesRead);
+            }
+            return new String(Hex.encodeHex(messageDigest.digest()));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(bis);
+        }
+    }
+
+    /**
+     *  Take a string and return its sha1 SHA1hash as a 40 hex digit string
+     *
+     * @param arg
+     * @return the SHA1
+     */
     public static String sha1Hash(String arg) {
         if (arg != null) {
             return DigestUtils.shaHex(arg);
@@ -113,6 +164,12 @@ public class MessageDigestUtils {
         }
     }
 
+    /**
+     * Take a byte array and return its sha1 SHA1hash as a 40 hex digit string
+     *
+     * @param barray
+     * @return the SHA1
+     */
     public static String sha1Hash(byte barray[]) {
         return DigestUtils.shaHex(barray);
     }
