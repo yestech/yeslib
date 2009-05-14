@@ -12,6 +12,7 @@ package org.yestech.lib.crypto;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,9 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 /**
@@ -43,6 +47,51 @@ public class MessageDigestUtils {
             return DigestUtils.md5Hex(arg);
         } else {
             return "";
+        }
+    }
+
+    /**
+     * Take a file  and return its md5 MD5hash as a 32 hex digit string. If the file is null then a null hash is returned.
+     *
+     * @param file
+     * @return the MD5
+     */
+    public static String md5Hash(File file) {
+        if (file == null) {
+            return null;
+        }
+        try {
+            return md5Hash(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Take an InputStream and return its md5 MD5hash as a 32 hex digit string. If the stream is null then a null hash is returned.
+     *
+     * @param stream
+     * @return the MD5
+     */
+    public static String md5Hash(InputStream stream) {
+        if (stream == null) {
+            return null;
+        }
+        BufferedInputStream bis = new BufferedInputStream(stream);
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            byte[] buffer = new byte[16384];
+            int bytesRead = -1;
+            while ((bytesRead = bis.read(buffer, 0, buffer.length)) != -1) {
+                messageDigest.update(buffer, 0, bytesRead);
+            }
+            return new String(Hex.encodeHex(messageDigest.digest()));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(bis);
         }
     }
 
