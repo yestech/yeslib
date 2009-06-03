@@ -9,11 +9,14 @@ import org.joda.time.DateTime;
  */
 public class JodaSerializerFactory extends AbstractSerializerFactory
 {
+    private JodaDateTimeSerializer jodaDateTimeSerializer = new JodaDateTimeSerializer();
+    private JodaDateTimeDeserializer jodaDateTimeDeserializer = new JodaDateTimeDeserializer();
+
     @Override
     public Serializer getSerializer(Class cl) throws HessianProtocolException
     {
         if (DateTime.class.isAssignableFrom(cl)) {
-            return new JodaDateTimeSerializer();
+            return jodaDateTimeSerializer;
         }
         return null;
     }
@@ -22,7 +25,7 @@ public class JodaSerializerFactory extends AbstractSerializerFactory
     public Deserializer getDeserializer(Class cl) throws HessianProtocolException
     {
         if (DateTime.class.isAssignableFrom(cl)) {
-            return new JodaDateTimeDeserializer();
+            return jodaDateTimeDeserializer;
         }
         return null;
     }
