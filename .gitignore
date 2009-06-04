@@ -6,3 +6,6 @@
 *.iws
 *.class
 target/
+.classpath
+.project
+.settings
