@@ -27,7 +27,7 @@ public class HessianCleanerAspect {
 
 
     @Around("cleanHibernateObjects()")
-    public Object clean(ProceedingJoinPoint call) {
+    public Object clean(ProceedingJoinPoint call) throws Throwable {
         try {
             if (logger.isDebugEnabled()) {
                 logger.debug("clean(ProceedingJoinPoint) - from logging aspect: entering method [" + call.toShortString() + "] with params:" + appendArgs(call.getArgs()));
@@ -39,7 +39,8 @@ public class HessianCleanerAspect {
             }
             return point;
         } catch (Throwable t) {
-            throw new UnsupportedOperationException(t);
+            logger.error(t.getMessage(), t);
+            throw t;
         }
     }
 
