@@ -267,10 +267,29 @@ public class XmlUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T fromXml(String xml) {
+        return (T) fromXml(xml, false);
+//        T result = (T) "";
+//        if (StringUtils.isNotBlank(xml)) {
+//            XStream stream = new XStream();
+////            stream.autodetectAnnotations(true);
+//            result = (T) stream.fromXML(xml);
+//        }
+//        return result;
+    }
+
+    /**
+     * Deserializes any XML to Object
+     *
+     * @param xml Object to deserialize
+     * @param annotations whether to use annotations
+     * @return Object from xml
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T fromXml(String xml, boolean annotations) {
         T result = (T) "";
         if (StringUtils.isNotBlank(xml)) {
             XStream stream = new XStream();
-//            stream.autodetectAnnotations(true);
+            stream.autodetectAnnotations(annotations);
             result = (T) stream.fromXML(xml);
         }
         return result;

@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
 import javax.persistence.Embeddable;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -29,11 +30,39 @@ import java.util.Locale;
  * @author Artie Copeland
  * @version $Revision: $
  */
+@XmlRootElement(name = "money")
 public class Money implements Serializable, Comparable<Money> {
     private BigDecimal amount = BigDecimal.ZERO;
     private Locale locale;
     private Currency curreny;
 
+//    /**
+//     * ONLY used for xml serialization and deserialization!!!!!
+//     */
+//    public Money() {
+//    }
+//
+//    /**
+//     * ONLY used for xml deserialization!!!!!
+//     */
+//    public void setAmount(BigDecimal amount) {
+//        this.amount = amount;
+//    }
+//
+//    /**
+//     * ONLY used for xml deserialization!!!!!
+//     */
+//    public void setLocale(Locale locale) {
+//        this.locale = locale;
+//    }
+//
+//    /**
+//     * ONLY used for xml deserialization!!!!!
+//     */
+//    public void setCurreny(Currency curreny) {
+//        this.curreny = curreny;
+//    }
+//
     public Money(double amount) {
         this(amount, Locale.US);
     }
