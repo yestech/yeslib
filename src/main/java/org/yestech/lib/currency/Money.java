@@ -23,6 +23,8 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Locale;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 /**
  * Represents an immutable monetary value. By default it assumes {@link Locale#US} and
  * the corresponding Currency.
@@ -30,6 +32,7 @@ import java.util.Locale;
  * @author Artie Copeland
  * @version $Revision: $
  */
+@XStreamAlias("money")
 @XmlRootElement(name = "money")
 public class Money implements Serializable, Comparable<Money> {
     private BigDecimal amount = BigDecimal.ZERO;
