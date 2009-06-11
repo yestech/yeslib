@@ -76,6 +76,7 @@ public class XmlUtils {
      * called.
      *
      * @param object Object to serialize
+     * @param annotation whether to use annotations
      * @return XML serialization of the supplied object
      */
     public static String toXml(Object object, boolean annotation) {
@@ -87,6 +88,7 @@ public class XmlUtils {
      * called.
      *
      * @param object Object to serialize
+     * @param annotation whether to use annotations
      * @return XML serialization of the supplied object
      */
     public static String toXml(Object object, DateTimeFormatter formatter, boolean annotation) {
@@ -117,6 +119,7 @@ public class XmlUtils {
      * will be used when called.
      *
      * @param list     list to serialize
+     * @param annotation whether to use annotations
      * @param listName Name of the list
      * @return The serialized list
      */
@@ -147,6 +150,7 @@ public class XmlUtils {
      * Serializes any Object to JSon
      *
      * @param object Object to serialize
+     * @param annotation whether to use annotations
      * @return JSon serialization of the supplied object
      */
     public static String toJSon(Object object, boolean annotation) {
@@ -157,6 +161,7 @@ public class XmlUtils {
      * Serializes any Object to JSon
      *
      * @param object Object to serialize
+     * @param annotation whether to use annotations
      * @return JSon serialization of the supplied object
      */
     public static String toJSon(Object object, DateTimeFormatter formatter, boolean annotation) {
@@ -175,13 +180,21 @@ public class XmlUtils {
      * @param omit
      */
     public static String toPartialXml(Object object, Map<String, Class<?>> omit) {
+        return (toPartialXml(object, omit, false));
+    }
+
+    /**
+     * @param object
+     * @param annotation whether to use annotations
+     * @param omit
+     */
+    public static String toPartialXml(Object object, Map<String, Class<?>> omit, boolean annotation) {
         String result = "";
         if (object != null && omit != null) {
             XStream stream = new XStream();
-            Iterator<Entry<String, Class<?>>> aliasIt = omit.entrySet()
-                    .iterator();
-            while (aliasIt.hasNext()) {
-                Map.Entry<String, Class<?>> alias = aliasIt.next();
+            stream.autodetectAnnotations(annotation);
+            for (Entry<String, Class<?>> stringClassEntry : omit.entrySet()) {
+                Entry<String, Class<?>> alias = stringClassEntry;
                 stream.omitField(alias.getValue(), alias.getKey());
             }
             result = stream.toXML(object);
@@ -203,13 +216,30 @@ public class XmlUtils {
      * @return XML serialization of the supplied object
      */
     public static String toXml(Object object, Map<String, Class<?>> aliases) {
+        return toXml(object, aliases, false);
+    }
+
+    /**
+     * Serializes any Object to XML. Using an Alias mapping that will replace
+     * the any instance of Class with the key String in the XML. Format of the
+     * alias mapping:
+     * <ul>
+     * <li>Key - String what you want to be printed
+     * <li>Value - Class to be remapped
+     * </ul>
+     *
+     * @param object  Object to serialize
+     * @param aliases Mapping Alias to use
+     * @param annotation whether to use annotations
+     * @return XML serialization of the supplied object
+     */
+    public static String toXml(Object object, Map<String, Class<?>> aliases, boolean annotation) {
         String result = "";
         if (object != null && aliases != null) {
             XStream stream = new XStream();
-            Iterator<Map.Entry<String, Class<?>>> aliasIt = aliases.entrySet()
-                    .iterator();
-            while (aliasIt.hasNext()) {
-                Map.Entry<String, Class<?>> alias = aliasIt.next();
+            stream.autodetectAnnotations(annotation);
+            for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
+                Entry<String, Class<?>> alias = stringClassEntry;
                 stream.alias(alias.getKey(), alias.getValue());
             }
             result = stream.toXML(object);
@@ -219,21 +249,23 @@ public class XmlUtils {
 
     public static String toPartialXml(Object object,
                                       Map<String, Class<?>> aliases, Map<String, Class<?>> omit) {
+        return toPartialXml(object, aliases, omit, false);
+    }
+
+    public static String toPartialXml(Object object,
+                                      Map<String, Class<?>> aliases, Map<String, Class<?>> omit, boolean annotation) {
         String result = "";
         XStream stream = new XStream();
+        stream.autodetectAnnotations(annotation);
         if (object != null && aliases != null) {
-            Iterator<Map.Entry<String, Class<?>>> aliasIt = aliases.entrySet()
-                    .iterator();
-            while (aliasIt.hasNext()) {
-                Map.Entry<String, Class<?>> alias = aliasIt.next();
+            for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
+                Entry<String, Class<?>> alias = stringClassEntry;
                 stream.alias(alias.getKey(), alias.getValue());
             }
         }
         if (object != null && omit != null) {
-            Iterator<Map.Entry<String, Class<?>>> aliasIt = omit.entrySet()
-                    .iterator();
-            while (aliasIt.hasNext()) {
-                Map.Entry<String, Class<?>> alias = aliasIt.next();
+            for (Entry<String, Class<?>> stringClassEntry : omit.entrySet()) {
+                Entry<String, Class<?>> alias = stringClassEntry;
                 stream.omitField(alias.getValue(), alias.getKey());
             }
         }
@@ -251,9 +283,22 @@ public class XmlUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T fromJSon(String json) {
+        return (T) fromJSon(json, false);
+    }
+
+    /**
+     * Deserializes any XML to Object
+     *
+     * @param json Object to deserialize
+     * @param annotation whether to use annotations
+     * @return Object from xml
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T fromJSon(String json, boolean annotation) {
         T result = (T) "";
         if (StringUtils.isNotBlank(json)) {
             XStream stream = new XStream(new JettisonMappedXmlDriver());
+            stream.autodetectAnnotations(annotation);
             result = (T) stream.fromXML(json);
         }
         return result;
@@ -268,13 +313,6 @@ public class XmlUtils {
     @SuppressWarnings("unchecked")
     public static <T> T fromXml(String xml) {
         return (T) fromXml(xml, false);
-//        T result = (T) "";
-//        if (StringUtils.isNotBlank(xml)) {
-//            XStream stream = new XStream();
-////            stream.autodetectAnnotations(true);
-//            result = (T) stream.fromXML(xml);
-//        }
-//        return result;
     }
 
     /**
@@ -344,13 +382,30 @@ public class XmlUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T fromXml(String xml, Map<String, Class<?>> aliases) {
+        return (T) fromXml(xml, aliases, false);
+    }
+
+    /**
+     * Deserializes any XML to Object. Using an Alias mapping that will replace
+     * the any instance of Class with the key String in the XML. Format of the
+     * alias mapping:
+     * <ul>
+     * <li>Key - String what you want to be printed
+     * <li>Value - Class to be remapped
+     * </ul>
+     *
+     * @param xml     Object to deserialize
+     * @param aliases Mapping Alias to use
+     * @return Object from xml
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T fromXml(String xml, Map<String, Class<?>> aliases,  boolean annotations) {
         T result = (T) "";
         if (StringUtils.isNotBlank(xml) && aliases != null) {
             XStream stream = new XStream();
-            Iterator<Map.Entry<String, Class<?>>> aliasIt = aliases.entrySet()
-                    .iterator();
-            while (aliasIt.hasNext()) {
-                Map.Entry<String, Class<?>> alias = aliasIt.next();
+            stream.autodetectAnnotations(annotations);
+            for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
+                Entry<String, Class<?>> alias = stringClassEntry;
                 stream.alias(alias.getKey(), alias.getValue());
             }
             result = (T) stream.fromXML(xml);
@@ -464,7 +519,7 @@ public class XmlUtils {
         if (uri != null && !("".equals(uri)))
             result.append("['").append(uri).append("']:");
         if (prefix != null)
-            result.append(prefix + ":");
+            result.append(prefix).append(":");
         if (localName != null)
             result.append(localName);
     }
