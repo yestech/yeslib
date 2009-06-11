@@ -97,6 +97,7 @@ public class XmlUtils {
             XStream stream = new XStream();
             stream.registerConverter(new JodaDateTimeConverter(formatter));
             stream.autodetectAnnotations(annotation);
+            stream.setMode(XStream.NO_REFERENCES);
             result = stream.toXML(object);
         }
         return result;
@@ -130,6 +131,7 @@ public class XmlUtils {
             XStream stream = new XStream();
             // stream.registerConverter(new XStreamDateConverter(locale));
             stream.autodetectAnnotations(annotation);
+            stream.setMode(XStream.NO_REFERENCES);
             stream.alias(listName, List.class);
             result = stream.toXML(list);
         }
@@ -170,6 +172,7 @@ public class XmlUtils {
             XStream stream = new XStream(new JettisonMappedXmlDriver());
             stream.registerConverter(new JodaDateTimeConverter(formatter));
             stream.autodetectAnnotations(annotation);
+            stream.setMode(XStream.NO_REFERENCES);
             result = stream.toXML(object);
         }
         return result;
@@ -192,6 +195,7 @@ public class XmlUtils {
         String result = "";
         if (object != null && omit != null) {
             XStream stream = new XStream();
+            stream.setMode(XStream.NO_REFERENCES);
             stream.autodetectAnnotations(annotation);
             for (Entry<String, Class<?>> stringClassEntry : omit.entrySet()) {
                 Entry<String, Class<?>> alias = stringClassEntry;
@@ -238,6 +242,7 @@ public class XmlUtils {
         if (object != null && aliases != null) {
             XStream stream = new XStream();
             stream.autodetectAnnotations(annotation);
+            stream.setMode(XStream.NO_REFERENCES);
             for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
                 Entry<String, Class<?>> alias = stringClassEntry;
                 stream.alias(alias.getKey(), alias.getValue());
@@ -257,6 +262,7 @@ public class XmlUtils {
         String result = "";
         XStream stream = new XStream();
         stream.autodetectAnnotations(annotation);
+        stream.setMode(XStream.NO_REFERENCES);
         if (object != null && aliases != null) {
             for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
                 Entry<String, Class<?>> alias = stringClassEntry;
@@ -299,6 +305,7 @@ public class XmlUtils {
         if (StringUtils.isNotBlank(json)) {
             XStream stream = new XStream(new JettisonMappedXmlDriver());
             stream.autodetectAnnotations(annotation);
+            stream.setMode(XStream.NO_REFERENCES);
             result = (T) stream.fromXML(json);
         }
         return result;
@@ -328,6 +335,7 @@ public class XmlUtils {
         if (StringUtils.isNotBlank(xml)) {
             XStream stream = new XStream();
             stream.autodetectAnnotations(annotations);
+            stream.setMode(XStream.NO_REFERENCES);
             result = (T) stream.fromXML(xml);
         }
         return result;
@@ -404,6 +412,7 @@ public class XmlUtils {
         if (StringUtils.isNotBlank(xml) && aliases != null) {
             XStream stream = new XStream();
             stream.autodetectAnnotations(annotations);
+            stream.setMode(XStream.NO_REFERENCES);
             for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
                 Entry<String, Class<?>> alias = stringClassEntry;
                 stream.alias(alias.getKey(), alias.getValue());
