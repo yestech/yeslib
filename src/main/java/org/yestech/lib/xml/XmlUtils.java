@@ -35,6 +35,9 @@ import java.io.StringWriter;
 public class XmlUtils {
     final private static Logger logger = LoggerFactory.getLogger(XmlUtils.class);
 
+    final private static XStream cachedStream = new XStream();
+    final private static XStream cachedJsonStream = new XStream(new JettisonMappedXmlDriver());
+
     public static void dump(XMLStreamReader reader, Logger callbackLogger) {
         if (logger.isDebugEnabled()) {
             callbackLogger.debug("\nXML Dump Results: \n" + parse(reader) + "\n");
@@ -94,11 +97,17 @@ public class XmlUtils {
     public static String toXml(Object object, DateTimeFormatter formatter, boolean annotation) {
         String result = "";
         if (object != null) {
-            XStream stream = new XStream();
-            stream.registerConverter(new JodaDateTimeConverter(formatter));
-            stream.autodetectAnnotations(annotation);
-            stream.setMode(XStream.NO_REFERENCES);
-            result = stream.toXML(object);
+            if (annotation) {
+                XStream stream = new XStream();
+                stream.registerConverter(new JodaDateTimeConverter(formatter));
+                stream.autodetectAnnotations(annotation);
+                stream.setMode(XStream.NO_REFERENCES);
+                result = stream.toXML(object);
+            } else {
+                cachedStream.registerConverter(new JodaDateTimeConverter(formatter));
+                cachedStream.setMode(XStream.NO_REFERENCES);
+                result = cachedStream.toXML(object);
+            }
         }
         return result;
     }
@@ -128,12 +137,19 @@ public class XmlUtils {
 
         String result = "";
         if (list != null) {
-            XStream stream = new XStream();
-            // stream.registerConverter(new XStreamDateConverter(locale));
-            stream.autodetectAnnotations(annotation);
-            stream.setMode(XStream.NO_REFERENCES);
-            stream.alias(listName, List.class);
-            result = stream.toXML(list);
+            if (annotation) {
+                XStream stream = new XStream();
+//                stream.registerConverter(new JodaDateTimeConverter(formatter));
+                stream.autodetectAnnotations(annotation);
+                stream.setMode(XStream.NO_REFERENCES);
+                stream.alias(listName, List.class);
+                result = stream.toXML(list);
+            } else {
+//                cachedStream.registerConverter(new JodaDateTimeConverter(formatter));
+                cachedStream.setMode(XStream.NO_REFERENCES);
+                cachedStream.alias(listName, List.class);
+                result = cachedStream.toXML(list);
+            }
         }
         return result;
     }
@@ -169,11 +185,17 @@ public class XmlUtils {
     public static String toJSon(Object object, DateTimeFormatter formatter, boolean annotation) {
         String result = "";
         if (object != null) {
-            XStream stream = new XStream(new JettisonMappedXmlDriver());
-            stream.registerConverter(new JodaDateTimeConverter(formatter));
-            stream.autodetectAnnotations(annotation);
-            stream.setMode(XStream.NO_REFERENCES);
-            result = stream.toXML(object);
+            if (annotation) {
+                XStream stream = new XStream(new JettisonMappedXmlDriver());
+                stream.registerConverter(new JodaDateTimeConverter(formatter));
+                stream.autodetectAnnotations(annotation);
+                stream.setMode(XStream.NO_REFERENCES);
+                result = stream.toXML(object);
+            } else {
+                cachedJsonStream.registerConverter(new JodaDateTimeConverter(formatter));
+                cachedJsonStream.setMode(XStream.NO_REFERENCES);
+                result = cachedJsonStream.toXML(object);
+            }
         }
         return result;
     }
@@ -240,14 +262,23 @@ public class XmlUtils {
     public static String toXml(Object object, Map<String, Class<?>> aliases, boolean annotation) {
         String result = "";
         if (object != null && aliases != null) {
-            XStream stream = new XStream();
-            stream.autodetectAnnotations(annotation);
-            stream.setMode(XStream.NO_REFERENCES);
-            for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
-                Entry<String, Class<?>> alias = stringClassEntry;
-                stream.alias(alias.getKey(), alias.getValue());
+            if (annotation) {
+                XStream stream = new XStream();
+                stream.autodetectAnnotations(annotation);
+                stream.setMode(XStream.NO_REFERENCES);
+                for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
+                    Entry<String, Class<?>> alias = stringClassEntry;
+                    stream.alias(alias.getKey(), alias.getValue());
+                }
+                result = stream.toXML(object);
+            } else {
+                cachedStream.setMode(XStream.NO_REFERENCES);
+                for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
+                    Entry<String, Class<?>> alias = stringClassEntry;
+                    cachedStream.alias(alias.getKey(), alias.getValue());
+                }
+                result = cachedStream.toXML(object);
             }
-            result = stream.toXML(object);
         }
         return result;
     }
@@ -303,10 +334,15 @@ public class XmlUtils {
     public static <T> T fromJSon(String json, boolean annotation) {
         T result = (T) "";
         if (StringUtils.isNotBlank(json)) {
-            XStream stream = new XStream(new JettisonMappedXmlDriver());
-            stream.autodetectAnnotations(annotation);
-            stream.setMode(XStream.NO_REFERENCES);
-            result = (T) stream.fromXML(json);
+            if (annotation) {
+                XStream stream = new XStream(new JettisonMappedXmlDriver());
+                stream.autodetectAnnotations(annotation);
+                stream.setMode(XStream.NO_REFERENCES);
+                result = (T) stream.fromXML(json);
+            } else {
+                cachedJsonStream.setMode(XStream.NO_REFERENCES);
+                result = (T) cachedJsonStream.fromXML(json);
+            }
         }
         return result;
     }
@@ -326,17 +362,22 @@ public class XmlUtils {
      * Deserializes any XML to Object
      *
      * @param xml Object to deserialize
-     * @param annotations whether to use annotations
+     * @param annotation whether to use annotations
      * @return Object from xml
      */
     @SuppressWarnings("unchecked")
-    public static <T> T fromXml(String xml, boolean annotations) {
+    public static <T> T fromXml(String xml, boolean annotation) {
         T result = (T) "";
         if (StringUtils.isNotBlank(xml)) {
-            XStream stream = new XStream();
-            stream.autodetectAnnotations(annotations);
-            stream.setMode(XStream.NO_REFERENCES);
-            result = (T) stream.fromXML(xml);
+            if (annotation) {
+                XStream stream = new XStream();
+                stream.autodetectAnnotations(annotation);
+                stream.setMode(XStream.NO_REFERENCES);
+                result = (T) stream.fromXML(xml);
+            } else {
+                cachedStream.setMode(XStream.NO_REFERENCES);
+                result = (T) cachedStream.fromXML(xml);
+            }
         }
         return result;
     }
@@ -403,21 +444,31 @@ public class XmlUtils {
      * </ul>
      *
      * @param xml     Object to deserialize
+     * @param annotation whether to use annotations
      * @param aliases Mapping Alias to use
      * @return Object from xml
      */
     @SuppressWarnings("unchecked")
-    public static <T> T fromXml(String xml, Map<String, Class<?>> aliases,  boolean annotations) {
+    public static <T> T fromXml(String xml, Map<String, Class<?>> aliases,  boolean annotation) {
         T result = (T) "";
         if (StringUtils.isNotBlank(xml) && aliases != null) {
-            XStream stream = new XStream();
-            stream.autodetectAnnotations(annotations);
-            stream.setMode(XStream.NO_REFERENCES);
-            for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
-                Entry<String, Class<?>> alias = stringClassEntry;
-                stream.alias(alias.getKey(), alias.getValue());
+            if (annotation) {
+                XStream stream = new XStream();
+                stream.autodetectAnnotations(annotation);
+                stream.setMode(XStream.NO_REFERENCES);
+                for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
+                    Entry<String, Class<?>> alias = stringClassEntry;
+                    stream.alias(alias.getKey(), alias.getValue());
+                }
+                result = (T) stream.fromXML(xml);
+            } else {
+                cachedStream.setMode(XStream.NO_REFERENCES);
+                for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
+                    Entry<String, Class<?>> alias = stringClassEntry;
+                    cachedStream.alias(alias.getKey(), alias.getValue());
+                }
+                result = (T) cachedStream.fromXML(xml);
             }
-            result = (T) stream.fromXML(xml);
         }
         return result;
     }
