@@ -242,13 +242,23 @@
     </profiles>
     <repositories>
         <repository>
+            <id>blackbox.thirdparty</id>
+            <url>http://blackbox.yestech.org/content/repositories/thirdparty</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
             <id>terracotta-repository</id>
             <url>http://www.terracotta.org/download/reflector/maven2</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
         <repository>
