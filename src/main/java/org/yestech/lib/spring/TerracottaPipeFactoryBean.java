@@ -26,6 +26,8 @@ import org.terracotta.modules.annotations.Root;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * Spring Factory to create a Terracotta Pipe
+ * 
  * @author Artie Copeland
  * @version $Revision: $
  */
