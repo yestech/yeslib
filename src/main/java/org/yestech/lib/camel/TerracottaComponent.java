@@ -19,11 +19,18 @@ import org.terracotta.message.topology.TopologyManager;
 import java.util.Map;
 
 /**
- * A component based on camel SEDA component.
- *
  * An implementation of a camel component for asynchronous PIPE exchanges on a
  * {@link org.terracotta.message.pipe.Pipe} within a CamelContext
- *
+ * <br/>
+ * Options:
+ * <ul>
+ * <li>size - size of the pipe to create if it doesnt exist (Optional)</li>
+ * <li>topologyName - name of the Pipe topology (Required) must match producer</li>
+ * <li>pipeName - name of the Pipe to create or use (Optional) must match producer if supplied, if not supplied topologyName is used</li>
+ * <li>concurrentConsumers - number of concurrentConsumers to listen to pipe (Optional) default = 1</li>
+ * </ul>
+ * 
+ * A component based on camel SEDA component.
  */
 @SuppressWarnings("unchecked")
 public class TerracottaComponent extends DefaultComponent {
@@ -35,10 +42,8 @@ public class TerracottaComponent extends DefaultComponent {
 
         String pipeName = (String)getAndRemoveParameter(parameters, "pipeName", String.class);
         Pipe<Object> pipe;
-        System.out.println("TerracottaPipeFactoryBean pipeSize : " + pipeSize);
         Pipe.Factory pipeFactory = new BlockingQueueBasedPipe.Factory(pipeSize);
         Topology.Factory topologyFactory = new DefaultTopology.Factory(pipeFactory);
-        System.out.println("TerracottaPipeFactoryBean topologyName : " + topologyName);
         Topology topology = TopologyManager.getInstance().<String, String>getOrCreateTopology(topologyName, topologyFactory);
 //        if (router == null) {
 //            router = new LoadBalancingRouter();

@@ -23,6 +23,7 @@ import org.terracotta.modules.annotations.Root;
 /**
  * An implementation of the asynchronous Pipe exchanges on a {@link org.terracotta.message.pipe.Pipe} within a CamelContext
  *
+ * A component based on camel SEDA component.
  */
 public class TerracottaEndpoint extends DefaultEndpoint {
     @Root

@@ -8,9 +8,9 @@
 package org.yestech.lib.camel;
 
 import org.apache.camel.*;
-import org.apache.camel.impl.ServiceSupport;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
+import org.apache.camel.impl.ServiceSupport;
 import org.apache.camel.impl.converter.AsyncProcessorTypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +19,11 @@ import org.terracotta.message.pipe.Pipe;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 /**
- * A Consumer for the SEDA component.
+ * A Consumer for the PIPE component.
  *
- * @version $Revision: 751655 $
+ * A component based on camel SEDA component.
  */
 public class TerracottaConsumer extends ServiceSupport implements Consumer, Runnable {
     final private static Logger logger = LoggerFactory.getLogger(TerracottaConsumer.class);
@@ -48,20 +47,15 @@ public class TerracottaConsumer extends ServiceSupport implements Consumer, Runn
         while (queue != null && isRunAllowed()) {
             final Exchange exchange = new DefaultExchange(endpoint.getCamelContext());
             try {
-//                final Object pipeMessage = queue.poll(1000, TimeUnit.MILLISECONDS);
                 final Object pipeMessage = queue.take();
-                System.out.println("TerracottaConsumer take: " + pipeMessage);
                 DefaultMessage message = new DefaultMessage();
                 message.setBody(pipeMessage);
-                System.out.println("TerracottaConsumer message: " + message);
                 exchange.setIn(message);
-                System.out.println("TerracottaConsumer exchange: " + exchange);
             } catch (InterruptedException e) {
-                logger.debug("Sleep interrupted, are we stopping? " + (isStopping() || isStopped()));
+                logger.debug("Wait interrupted, are we stopping? " + (isStopping() || isStopped()));
                 continue;
             }
             if (exchange != null) {
-                System.out.println("TerracottaConsumer exchange process: " + exchange);
                 if (isRunAllowed()) {
                     try {
                         processor.process(exchange, new AsyncCallback() {
@@ -70,7 +64,6 @@ public class TerracottaConsumer extends ServiceSupport implements Consumer, Runn
                         });
                     } catch (Exception e) {
                         logger.error("TerracottaConsumer pipe caught: " + e, e);
-                        e.printStackTrace();
                     }
                 } else {
                     logger.warn("This consumer is stopped during polling an exchange, so putting it back on the TerracottaConsumer pipe: " + exchange);

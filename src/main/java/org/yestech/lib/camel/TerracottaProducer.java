@@ -15,7 +15,8 @@ import org.apache.camel.component.seda.SedaEndpoint;
 import org.terracotta.message.pipe.Pipe;
 
 /**
- * @version $Revision: 1.1 $
+ * 
+ * A component based on camel SEDA component.
  */
 public class TerracottaProducer extends TerracottaCollectionProducer {
     private TerracottaEndpoint endpoint;

@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A simple {@link org.apache.camel.Producer} which just appends to a {@link java.util.Collection} the {@link org.apache.camel.Exchange} object.
  *
- * @version $Revision: 640438 $
+ * A component based on camel SEDA component.
  */
 public class TerracottaCollectionProducer extends DefaultProducer implements AsyncProcessor {
     final private static Logger logger = LoggerFactory.getLogger(TerracottaCollectionProducer.class);
