@@ -83,28 +83,14 @@ public class XmlUtils {
      * @return XML serialization of the supplied object
      */
     public static String toXml(Object object, boolean annotation) {
-        return toXml(object, DateTimeFormat.longDateTime(), annotation);
-    }
-
-    /**
-     * Serializes any Object to XML Note: Annotation detection will be used when
-     * called.
-     *
-     * @param object Object to serialize
-     * @param annotation whether to use annotations
-     * @return XML serialization of the supplied object
-     */
-    public static String toXml(Object object, DateTimeFormatter formatter, boolean annotation) {
         String result = "";
         if (object != null) {
             if (annotation) {
                 XStream stream = new XStream();
-                stream.registerConverter(new JodaDateTimeConverter(formatter));
                 stream.autodetectAnnotations(annotation);
                 stream.setMode(XStream.NO_REFERENCES);
                 result = stream.toXML(object);
             } else {
-                cachedStream.registerConverter(new JodaDateTimeConverter(formatter));
                 cachedStream.setMode(XStream.NO_REFERENCES);
                 result = cachedStream.toXML(object);
             }
@@ -139,13 +125,11 @@ public class XmlUtils {
         if (list != null) {
             if (annotation) {
                 XStream stream = new XStream();
-//                stream.registerConverter(new JodaDateTimeConverter(formatter));
                 stream.autodetectAnnotations(annotation);
                 stream.setMode(XStream.NO_REFERENCES);
                 stream.alias(listName, List.class);
                 result = stream.toXML(list);
             } else {
-//                cachedStream.registerConverter(new JodaDateTimeConverter(formatter));
                 cachedStream.setMode(XStream.NO_REFERENCES);
                 cachedStream.alias(listName, List.class);
                 result = cachedStream.toXML(list);
@@ -172,27 +156,14 @@ public class XmlUtils {
      * @return JSon serialization of the supplied object
      */
     public static String toJSon(Object object, boolean annotation) {
-        return toJSon(object, DateTimeFormat.longDateTime(), annotation);
-    }
-
-    /**
-     * Serializes any Object to JSon
-     *
-     * @param object Object to serialize
-     * @param annotation whether to use annotations
-     * @return JSon serialization of the supplied object
-     */
-    public static String toJSon(Object object, DateTimeFormatter formatter, boolean annotation) {
         String result = "";
         if (object != null) {
             if (annotation) {
                 XStream stream = new XStream(new JettisonMappedXmlDriver());
-                stream.registerConverter(new JodaDateTimeConverter(formatter));
                 stream.autodetectAnnotations(annotation);
                 stream.setMode(XStream.NO_REFERENCES);
                 result = stream.toXML(object);
             } else {
-                cachedJsonStream.registerConverter(new JodaDateTimeConverter(formatter));
                 cachedJsonStream.setMode(XStream.NO_REFERENCES);
                 result = cachedJsonStream.toXML(object);
             }
