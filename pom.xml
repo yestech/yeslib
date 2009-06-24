@@ -8,18 +8,18 @@
     <name>YES Library</name>
     <url>http://yestech.org</url>
     <properties>
-        <tim.pipes.version>2.1.1-SNAPSHOT</tim.pipes.version>
-        <tim-annotations.version>1.4.0-SNAPSHOT</tim-annotations.version>
+        <tim.pipes.version>2.1.1</tim.pipes.version>
+        <tim-annotations.version>1.4.0</tim-annotations.version>
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.terracotta.modules</groupId>
+            <groupId>org.terracotta.modules.beta</groupId>
             <artifactId>tim-pipes</artifactId>
             <version>${tim.pipes.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.terracotta.modules</groupId>
+            <groupId>org.terracotta.modules.beta</groupId>
             <artifactId>tim-annotations</artifactId>
             <version>${tim-annotations.version}</version>
             <scope>provided</scope>
