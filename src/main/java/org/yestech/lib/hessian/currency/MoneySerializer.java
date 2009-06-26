@@ -13,6 +13,7 @@ import com.caucho.hessian.io.AbstractSerializer;
 import org.yestech.lib.currency.Money;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * Serializes Money objects correctly.
@@ -26,14 +27,36 @@ public class MoneySerializer extends AbstractSerializer
     public void writeObject(Object obj, AbstractHessianOutput out) throws IOException
     {
 
-        if (obj == null) {
+        if (obj == null)
             out.writeNull();
-        }
         else {
             Money money = (Money) obj;
             out.writeObject(money.getAmount());
             out.writeObject(money.getLocale());
+//            Class cl = obj.getClass();
+//
+//            if (out.addRef(obj))
+//                return;
+//
+//            int ref = out.writeObjectBegin(cl.getName());
+//
+//            Money money = (Money) obj;
+//
+//            if (ref < -1) {
+//                out.writeString("value");
+//                out.writeString(money.getAmount().toString());
+//                out.writeString("value");
+//                out.writeString(money.getAmount().toString());
+//                out.writeMapEnd();
+//            } else {
+//                if (ref == -1) {
+//                    out.writeInt(1);
+//                    out.writeString("value");
+//                    out.writeObjectBegin(cl.getName());
+//                }
+//
+//                out.writeString(money.toString());
+//            }
         }
-
     }
 }
