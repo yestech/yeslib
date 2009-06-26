@@ -13,50 +13,42 @@ import com.caucho.hessian.io.AbstractSerializer;
 import org.yestech.lib.currency.Money;
 
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.util.Locale;
 
 /**
  * Serializes Money objects correctly.
  *
  * @author A.J. Wright
  */
-public class MoneySerializer extends AbstractSerializer
-{
+public class MoneySerializer extends AbstractSerializer {
 
     @Override
-    public void writeObject(Object obj, AbstractHessianOutput out) throws IOException
-    {
+    public void writeObject(Object obj, AbstractHessianOutput out) throws IOException {
 
-        if (obj == null)
-            out.writeNull();
-        else {
-            Money money = (Money) obj;
-            out.writeObject(money.getAmount());
-            out.writeObject(money.getLocale());
-//            Class cl = obj.getClass();
-//
-//            if (out.addRef(obj))
-//                return;
-//
-//            int ref = out.writeObjectBegin(cl.getName());
-//
-//            Money money = (Money) obj;
-//
-//            if (ref < -1) {
-//                out.writeString("value");
-//                out.writeString(money.getAmount().toString());
-//                out.writeString("value");
-//                out.writeString(money.getAmount().toString());
-//                out.writeMapEnd();
-//            } else {
-//                if (ref == -1) {
-//                    out.writeInt(1);
-//                    out.writeString("value");
-//                    out.writeObjectBegin(cl.getName());
-//                }
-//
-//                out.writeString(money.toString());
-//            }
+        Class cl = obj.getClass();
+
+        if (out.addRef(obj))
+            return;
+
+        int ref = out.writeObjectBegin(cl.getName());
+
+        Money money = (Money) obj;
+
+        if (ref < -1) {
+            out.writeString("value");
+            out.writeString(money.toString());
+            out.writeString("locale");
+            final Locale locale = money.getLocale();
+            out.writeString(locale.getLanguage() + ":" + locale.getCountry());
+            out.writeMapEnd();
+        } else {
+            if (ref == -1) {
+                out.writeInt(1);
+                out.writeString("value");
+                out.writeObjectBegin(cl.getName());
+            }
+
+            out.writeString(money.toString());
         }
     }
 }

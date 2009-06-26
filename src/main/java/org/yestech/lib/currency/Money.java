@@ -39,33 +39,33 @@ public class Money implements Serializable, Comparable<Money> {
     private Locale locale;
     private Currency curreny;
 
-//    /**
-//     * ONLY used for xml serialization and deserialization!!!!!
-//     */
-//    public Money() {
-//    }
-//
-//    /**
-//     * ONLY used for xml deserialization!!!!!
-//     */
-//    public void setAmount(BigDecimal amount) {
-//        this.amount = amount;
-//    }
-//
-//    /**
-//     * ONLY used for xml deserialization!!!!!
-//     */
-//    public void setLocale(Locale locale) {
-//        this.locale = locale;
-//    }
-//
-//    /**
-//     * ONLY used for xml deserialization!!!!!
-//     */
-//    public void setCurreny(Currency curreny) {
-//        this.curreny = curreny;
-//    }
-//
+    /**
+     * ONLY used for xml serialization and deserialization!!!!!
+     */
+    public Money() {
+    }
+
+    /**
+     * ONLY used for xml deserialization!!!!!
+     */
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    /**
+     * ONLY used for xml deserialization!!!!!
+     */
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    /**
+     * ONLY used for xml deserialization!!!!!
+     */
+    public void setCurreny(Currency curreny) {
+        this.curreny = curreny;
+    }
+
     public Money(double amount) {
         this(amount, Locale.US);
     }
