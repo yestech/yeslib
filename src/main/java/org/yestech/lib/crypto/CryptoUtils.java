@@ -76,11 +76,21 @@ public class CryptoUtils {
      * @return AES 128bit Base64 key
      */
     public static String generateKey() {
+        return generateKey(128);
+    }
+
+    /**
+     * Returns an AES nbit Base64 key
+     *
+     * @param keySize Size of the key
+     * @return AES 128bit Base64 key
+     */
+    public static String generateKey(int keySize) {
         String key = "";
         KeyGenerator kgen = null;
         try {
             kgen = KeyGenerator.getInstance("AES");
-            kgen.init(128); // 192 and 256 bits may not be available
+            kgen.init(keySize);
             SecretKey skey = kgen.generateKey();
             byte[] raw = skey.getEncoded();
             key = new String(Base64.encodeBase64(raw));
