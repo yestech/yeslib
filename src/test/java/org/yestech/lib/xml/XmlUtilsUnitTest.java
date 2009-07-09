@@ -122,6 +122,19 @@ public class XmlUtilsUnitTest {
         assertEquals(test, json);
     }
 
+    @Test
+    public void testIgnoreInvalidFlieds() {
+        TestObject expected = new TestObject();
+        String xml = "<org.yestech.lib.xml.XmlUtilsUnitTest_-TestObject>\n" +
+                "  <param2>0</param2>\n" +
+                "  <param3>0</param3>\n" +
+                "  <invalid>0</invalid>\n" +
+                "</org.yestech.lib.xml.XmlUtilsUnitTest_-TestObject>";
+        TestObject to = XmlUtils.fromXml(xml);
+        assertNotNull(to);
+        assertEquals(expected, to);
+    }
+
     @XmlRootElement
     private static class TestObject {
         private String param1;

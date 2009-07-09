@@ -9,25 +9,23 @@ package org.yestech.lib.xml;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormat;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.Marshaller;
-import java.util.Iterator;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.io.StringReader;
-import java.io.StringWriter;
 
 /**
  * Utility class for XML
@@ -35,8 +33,36 @@ import java.io.StringWriter;
 public class XmlUtils {
     final private static Logger logger = LoggerFactory.getLogger(XmlUtils.class);
 
-    final private static XStream cachedStream = new XStream();
-    final private static XStream cachedJsonStream = new XStream(new JettisonMappedXmlDriver());
+    final private static XStream cachedStream;
+
+    final private static XStream cachedJsonStream;
+
+    static {
+        cachedStream = new XStream() {
+            protected MapperWrapper wrapMapper(MapperWrapper next) {
+                return new MapperWrapper(next) {
+
+                    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                        return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                    }
+
+                };
+            }
+
+        };
+
+        cachedJsonStream = new XStream(new JettisonMappedXmlDriver()) {
+            protected MapperWrapper wrapMapper(MapperWrapper next) {
+                return new MapperWrapper(next) {
+
+                    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                        return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                    }
+
+                };
+            }
+        };
+    }
 
     public static void dump(XMLStreamReader reader, Logger callbackLogger) {
         if (logger.isDebugEnabled()) {
@@ -78,7 +104,7 @@ public class XmlUtils {
      * Serializes any Object to XML Note: Annotation detection will be used when
      * called.
      *
-     * @param object Object to serialize
+     * @param object     Object to serialize
      * @param annotation whether to use annotations
      * @return XML serialization of the supplied object
      */
@@ -86,7 +112,17 @@ public class XmlUtils {
         String result = "";
         if (object != null) {
             if (annotation) {
-                XStream stream = new XStream();
+                XStream stream = new XStream() {
+                    protected MapperWrapper wrapMapper(MapperWrapper next) {
+                        return new MapperWrapper(next) {
+
+                            public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                                return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                            }
+
+                        };
+                    }
+                };
                 stream.autodetectAnnotations(annotation);
                 stream.setMode(XStream.NO_REFERENCES);
                 result = stream.toXML(object);
@@ -114,9 +150,9 @@ public class XmlUtils {
      * Serializes a list to xml with a given name Note: Annotation detection
      * will be used when called.
      *
-     * @param list     list to serialize
+     * @param list       list to serialize
      * @param annotation whether to use annotations
-     * @param listName Name of the list
+     * @param listName   Name of the list
      * @return The serialized list
      */
     public static String toXml(List<?> list, String listName, boolean annotation) {
@@ -124,7 +160,17 @@ public class XmlUtils {
         String result = "";
         if (list != null) {
             if (annotation) {
-                XStream stream = new XStream();
+                XStream stream = new XStream() {
+                    protected MapperWrapper wrapMapper(MapperWrapper next) {
+                        return new MapperWrapper(next) {
+
+                            public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                                return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                            }
+
+                        };
+                    }
+                };
                 stream.autodetectAnnotations(annotation);
                 stream.setMode(XStream.NO_REFERENCES);
                 stream.alias(listName, List.class);
@@ -151,7 +197,7 @@ public class XmlUtils {
     /**
      * Serializes any Object to JSon
      *
-     * @param object Object to serialize
+     * @param object     Object to serialize
      * @param annotation whether to use annotations
      * @return JSon serialization of the supplied object
      */
@@ -159,7 +205,17 @@ public class XmlUtils {
         String result = "";
         if (object != null) {
             if (annotation) {
-                XStream stream = new XStream(new JettisonMappedXmlDriver());
+                XStream stream = new XStream(new JettisonMappedXmlDriver()) {
+                    protected MapperWrapper wrapMapper(MapperWrapper next) {
+                        return new MapperWrapper(next) {
+
+                            public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                                return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                            }
+
+                        };
+                    }
+                };
                 stream.autodetectAnnotations(annotation);
                 stream.setMode(XStream.NO_REFERENCES);
                 result = stream.toXML(object);
@@ -187,7 +243,17 @@ public class XmlUtils {
     public static String toPartialXml(Object object, Map<String, Class<?>> omit, boolean annotation) {
         String result = "";
         if (object != null && omit != null) {
-            XStream stream = new XStream();
+            XStream stream = new XStream() {
+                protected MapperWrapper wrapMapper(MapperWrapper next) {
+                    return new MapperWrapper(next) {
+
+                        public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                            return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                        }
+
+                    };
+                }
+            };
             stream.setMode(XStream.NO_REFERENCES);
             stream.autodetectAnnotations(annotation);
             for (Entry<String, Class<?>> stringClassEntry : omit.entrySet()) {
@@ -225,8 +291,8 @@ public class XmlUtils {
      * <li>Value - Class to be remapped
      * </ul>
      *
-     * @param object  Object to serialize
-     * @param aliases Mapping Alias to use
+     * @param object     Object to serialize
+     * @param aliases    Mapping Alias to use
      * @param annotation whether to use annotations
      * @return XML serialization of the supplied object
      */
@@ -234,7 +300,17 @@ public class XmlUtils {
         String result = "";
         if (object != null && aliases != null) {
             if (annotation) {
-                XStream stream = new XStream();
+                XStream stream = new XStream() {
+                    protected MapperWrapper wrapMapper(MapperWrapper next) {
+                        return new MapperWrapper(next) {
+
+                            public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                                return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                            }
+
+                        };
+                    }
+                };
                 stream.autodetectAnnotations(annotation);
                 stream.setMode(XStream.NO_REFERENCES);
                 for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
@@ -262,7 +338,17 @@ public class XmlUtils {
     public static String toPartialXml(Object object,
                                       Map<String, Class<?>> aliases, Map<String, Class<?>> omit, boolean annotation) {
         String result = "";
-        XStream stream = new XStream();
+        XStream stream = new XStream() {
+            protected MapperWrapper wrapMapper(MapperWrapper next) {
+                return new MapperWrapper(next) {
+
+                    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                        return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                    }
+
+                };
+            }
+        };
         stream.autodetectAnnotations(annotation);
         stream.setMode(XStream.NO_REFERENCES);
         if (object != null && aliases != null) {
@@ -297,7 +383,7 @@ public class XmlUtils {
     /**
      * Deserializes any XML to Object
      *
-     * @param json Object to deserialize
+     * @param json       Object to deserialize
      * @param annotation whether to use annotations
      * @return Object from xml
      */
@@ -306,7 +392,17 @@ public class XmlUtils {
         T result = (T) "";
         if (StringUtils.isNotBlank(json)) {
             if (annotation) {
-                XStream stream = new XStream(new JettisonMappedXmlDriver());
+                XStream stream = new XStream(new JettisonMappedXmlDriver()) {
+                    protected MapperWrapper wrapMapper(MapperWrapper next) {
+                        return new MapperWrapper(next) {
+
+                            public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                                return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                            }
+
+                        };
+                    }
+                };
                 stream.autodetectAnnotations(annotation);
                 stream.setMode(XStream.NO_REFERENCES);
                 result = (T) stream.fromXML(json);
@@ -332,7 +428,7 @@ public class XmlUtils {
     /**
      * Deserializes any XML to Object
      *
-     * @param xml Object to deserialize
+     * @param xml        Object to deserialize
      * @param annotation whether to use annotations
      * @return Object from xml
      */
@@ -341,7 +437,17 @@ public class XmlUtils {
         T result = (T) "";
         if (StringUtils.isNotBlank(xml)) {
             if (annotation) {
-                XStream stream = new XStream();
+                XStream stream = new XStream() {
+                    protected MapperWrapper wrapMapper(MapperWrapper next) {
+                        return new MapperWrapper(next) {
+
+                            public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                                return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                            }
+
+                        };
+                    }
+                };
                 stream.autodetectAnnotations(annotation);
                 stream.setMode(XStream.NO_REFERENCES);
                 result = (T) stream.fromXML(xml);
@@ -357,19 +463,19 @@ public class XmlUtils {
      * Deserializes any XML to Object
      *
      * @param result Object of deserialization
-     * @param xml Object to deserialize
+     * @param xml    Object to deserialize
      * @return Object from xml
      */
     @SuppressWarnings("unchecked")
     public static <T> T fromXmlJaxb(Object result, String xml) {
-        return (T)fromXmlJaxb(result.getClass(), xml);
+        return (T) fromXmlJaxb(result.getClass(), xml);
     }
 
     /**
      * Deserializes any XML to Object
      *
      * @param resultClass Class of deserialization
-     * @param xml Object to deserialize
+     * @param xml         Object to deserialize
      * @return Object from xml
      */
     @SuppressWarnings("unchecked")
@@ -414,17 +520,27 @@ public class XmlUtils {
      * <li>Value - Class to be remapped
      * </ul>
      *
-     * @param xml     Object to deserialize
+     * @param xml        Object to deserialize
      * @param annotation whether to use annotations
-     * @param aliases Mapping Alias to use
+     * @param aliases    Mapping Alias to use
      * @return Object from xml
      */
     @SuppressWarnings("unchecked")
-    public static <T> T fromXml(String xml, Map<String, Class<?>> aliases,  boolean annotation) {
+    public static <T> T fromXml(String xml, Map<String, Class<?>> aliases, boolean annotation) {
         T result = (T) "";
         if (StringUtils.isNotBlank(xml) && aliases != null) {
             if (annotation) {
-                XStream stream = new XStream();
+                XStream stream = new XStream() {
+                    protected MapperWrapper wrapMapper(MapperWrapper next) {
+                        return new MapperWrapper(next) {
+
+                            public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                                return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+                            }
+
+                        };
+                    }
+                };
                 stream.autodetectAnnotations(annotation);
                 stream.setMode(XStream.NO_REFERENCES);
                 for (Entry<String, Class<?>> stringClassEntry : aliases.entrySet()) {
@@ -591,7 +707,6 @@ public class XmlUtils {
             result.append("xmlns:").append(prefix).append("='").append(uri)
                     .append("'");
     }
-
 
 
 }
