@@ -28,6 +28,8 @@ public class PasswordConversion {
 
     static {
         convertors.put(PasswordTypeEnum.UNIX_CRYPT, new UnixCryptConversionFactory());
+        convertors.put(PasswordTypeEnum.UNIX_MD5, new UnixMd5ConversionFactory());
+        convertors.put(PasswordTypeEnum.APACHE, new ApacheConversionFactory());
         convertors.put(PasswordTypeEnum.UPORTAL, new UPortalConversionFactory());
     }
 
