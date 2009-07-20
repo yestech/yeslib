@@ -23,11 +23,11 @@ import org.apache.commons.lang.StringUtils;
  * @author $Author: $
  * @version $Revision: $
  */
-public class CryptoUtilsUnitTest {
+public class AesCryptoUtilsUnitTest {
     @Test
     public void testGenerateKey()
     {
-        String key = AesUtils.generateKey();
+        String key = AesCryptoUtils.generateKey();
         assertNotNull(key);
         assertTrue("Make sure we dont have an empty key", StringUtils.isNotBlank(key));
     }
@@ -35,7 +35,7 @@ public class CryptoUtilsUnitTest {
     @Test
     public void testEncryptWithManualKey() throws Exception
     {
-        String encrypt = AesUtils.encrypt("NzwxkjkRhMGmbJjN0Bqz2Q==",
+        String encrypt = AesCryptoUtils.encrypt("NzwxkjkRhMGmbJjN0Bqz2Q==",
                 "This is a secret");
         assertNotNull(encrypt);
         assertTrue(StringUtils.isNotBlank(encrypt));
@@ -46,7 +46,7 @@ public class CryptoUtilsUnitTest {
     @Test
     public void testDecryptWithManualKey() throws Exception
     {
-        String decrypt = AesUtils.decrypt("NzwxkjkRhMGmbJjN0Bqz2Q==",
+        String decrypt = AesCryptoUtils.decrypt("NzwxkjkRhMGmbJjN0Bqz2Q==",
         "338e67055b17204a993494a16f7c1d1f916b619c14f915d2c82e2aa2bc7d45db");
         assertNotNull(decrypt);
         assertTrue(StringUtils.isNotBlank(decrypt));
@@ -56,7 +56,7 @@ public class CryptoUtilsUnitTest {
     @Test
     public void testEncryptBase64WithManualKey() throws Exception
     {
-        String encrypt = AesUtils.encryptBase64("NzwxkjkRhMGmbJjN0Bqz2Q==",
+        String encrypt = AesCryptoUtils.encryptBase64("NzwxkjkRhMGmbJjN0Bqz2Q==",
         "This is top secret");
         assertNotNull(encrypt);
         assertTrue(StringUtils.isNotBlank(encrypt));
@@ -67,7 +67,7 @@ public class CryptoUtilsUnitTest {
     @Test
     public void testDecryptBase64WithManualKey() throws Exception
     {
-        String decrypt = AesUtils.decryptBase64("NzwxkjkRhMGmbJjN0Bqz2Q==",
+        String decrypt = AesCryptoUtils.decryptBase64("NzwxkjkRhMGmbJjN0Bqz2Q==",
         "kiJvCxdi2BWPpY+uxTlzAiGYpFx+kc4i2pXT15l6oS8=");
         assertNotNull(decrypt);
         assertTrue(StringUtils.isNotBlank(decrypt));
