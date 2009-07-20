@@ -25,7 +25,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AesCryptoUtils {
     final private static Logger logger = LoggerFactory.getLogger(AesCryptoUtils.class);
-
+    
     final private static Hex hexCodec = new Hex();
     private final static String DEFAULT_KEY = "waZkAoftB0MIfEuNsh12RA==";
     private static String encryptionKey = DEFAULT_KEY;
