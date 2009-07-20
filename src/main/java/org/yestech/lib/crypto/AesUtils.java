@@ -23,14 +23,14 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * Class that implements AES Algorithmns
  */
-public class AesCryptoUtils {
-    final private static Logger logger = LoggerFactory.getLogger(AesCryptoUtils.class);
+public class AesUtils {
+    final private static Logger logger = LoggerFactory.getLogger(AesUtils.class);
     
     final private static Hex hexCodec = new Hex();
     private final static String DEFAULT_KEY = "waZkAoftB0MIfEuNsh12RA==";
     private static String encryptionKey = DEFAULT_KEY;
 
-    private AesCryptoUtils() {
+    private AesUtils() {
     }
 
     /**
@@ -47,27 +47,27 @@ public class AesCryptoUtils {
     }
 
     public static String encrypt(long value) {
-        return AesCryptoUtils.encrypt(getEnryptionKey(), value);
+        return AesUtils.encrypt(getEnryptionKey(), value);
     }
 
     public static String encrypt(int value) {
-        return AesCryptoUtils.encrypt(getEnryptionKey(), value);
+        return AesUtils.encrypt(getEnryptionKey(), value);
     }
 
     public static String encrypt(String message) {
-        return AesCryptoUtils.encrypt(getEnryptionKey(), message);
+        return AesUtils.encrypt(getEnryptionKey(), message);
     }
 
     public static String encryptBase64(long value) {
-        return AesCryptoUtils.encryptBase64(getEnryptionKey(), value);
+        return AesUtils.encryptBase64(getEnryptionKey(), value);
     }
 
     public static String encryptBase64(int value) {
-        return AesCryptoUtils.encryptBase64(getEnryptionKey(), value);
+        return AesUtils.encryptBase64(getEnryptionKey(), value);
     }
 
     public static String encryptBase64(String message) {
-        return AesCryptoUtils.encryptBase64(getEnryptionKey(), message);
+        return AesUtils.encryptBase64(getEnryptionKey(), message);
     }
 
     /**
@@ -279,7 +279,7 @@ public class AesCryptoUtils {
             logger.debug("key: " + key);
             logger.debug("encrypted message: " + value);
         }
-        return AesCryptoUtils.decrypt(key, value);
+        return AesUtils.decrypt(key, value);
     }
 
     public static String decryptBase64(String value) {
@@ -288,6 +288,6 @@ public class AesCryptoUtils {
             logger.debug("key: " + key);
             logger.debug("encrypted message: " + value);
         }
-        return AesCryptoUtils.decryptBase64(key, value);
+        return AesUtils.decryptBase64(key, value);
     }
 }
