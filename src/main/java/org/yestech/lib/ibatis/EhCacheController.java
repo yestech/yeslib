@@ -61,7 +61,7 @@ public class EhCacheController implements CacheController {
     public Object getObject(CacheModel cacheModel, Object key) {
         Object result = null;
         try {
-            Element element = getCache(cacheModel).get(key);
+            Element element = getCache(cacheModel).get(key.toString());
             if (element != null) {
                 result = element.getObjectValue();
             }
@@ -80,7 +80,7 @@ public class EhCacheController implements CacheController {
      * @param object     - the object to add.
      */
     public void putObject(CacheModel cacheModel, Object key, Object object) {
-        getCache(cacheModel).put(new Element(key, object));
+        getCache(cacheModel).put(new Element(key.toString(), object));
     }
 
     /**
@@ -90,8 +90,8 @@ public class EhCacheController implements CacheController {
      * @return the removed object(?).
      */
     public Object removeObject(CacheModel cacheModel, Object key) {
-        Object result = this.getObject(cacheModel, key);
-        getCache(cacheModel).remove(key);
+        Object result = this.getObject(cacheModel, key.toString());
+        getCache(cacheModel).remove(key.toString());
         return result;
     }
 
