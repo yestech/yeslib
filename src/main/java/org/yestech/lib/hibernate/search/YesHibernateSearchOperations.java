@@ -26,11 +26,11 @@ public interface YesHibernateSearchOperations {
     Object doExecute(HibernateSearchCallback action, boolean enforceNewSession, boolean enforceNativeSession)
             throws DataAccessException;
 
-    <T> List<T> search(org.apache.lucene.search.Query query, Class searchClass);
+    <T> List<T> search(org.apache.lucene.search.Query query, Class<T> searchClass);
 
-    <T> List<T> search(String searchText, Class searchClass, String... fields);
+    <T> List<T> search(String searchText, Class<T> searchClass, String... fields);
 
-    <T> List<T> search(String searchText, Class searchClass, Analyzer analyzer, String... fields);
+    <T> List<T> search(String searchText, Class<T> searchClass, Analyzer analyzer, String... fields);
 
     <T> List<T> search(org.apache.lucene.search.Query query, Class... searchClass);
 

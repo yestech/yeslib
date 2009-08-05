@@ -257,7 +257,7 @@ public class YesHibernateSearchTemplate extends HibernateAccessor implements Yes
      * @param <T>
      * @return
      */
-    public <T> List<T> search(final org.apache.lucene.search.Query query, final Class searchClass) {
+    public <T> List<T> search(final org.apache.lucene.search.Query query, final Class<T> searchClass) {
         return (List<T>) executeWithNativeSession(new HibernateSearchCallback() {
             public Object doInHibernate(Session session) throws HibernateException {
                 FullTextSession fullTextSession = Search.getFullTextSession(session);
@@ -296,7 +296,7 @@ public class YesHibernateSearchTemplate extends HibernateAccessor implements Yes
      * @param <T>
      * @return
      */
-    public <T> List<T> search(final String searchText, final Class searchClass, final String... fields) {
+    public <T> List<T> search(final String searchText, final Class<T> searchClass, final String... fields) {
         return search(searchText, searchClass, new StandardAnalyzer(), fields);
     }
 
@@ -322,7 +322,7 @@ public class YesHibernateSearchTemplate extends HibernateAccessor implements Yes
      * @param <T>
      * @return
      */
-    public <T> List<T> search(final String searchText, final Class searchClass, final Analyzer analyzer, final String... fields) {
+    public <T> List<T> search(final String searchText, final Class<T> searchClass, final Analyzer analyzer, final String... fields) {
         QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
         org.apache.lucene.search.Query query;
         try {
