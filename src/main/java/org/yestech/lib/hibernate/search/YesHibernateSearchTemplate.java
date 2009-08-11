@@ -18,11 +18,16 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.*;
 import org.hibernate.*;
+import org.hibernate.Query;
+import org.hibernate.Filter;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.event.EventSource;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
+import org.hibernate.search.FullTextQuery;
+import org.hibernate.search.FullTextFilter;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.HibernateAccessor;
@@ -34,6 +39,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A wrapper for Hibernate Search.  Modeled after HibernateTemplate.
@@ -285,6 +291,35 @@ public class YesHibernateSearchTemplate extends HibernateAccessor implements Yes
             }
         });
 
+    }
+
+    public <T> List<T> search(final String searchText, final List<FilterConfig> filters, final Class[] classes, final String... fields) {
+        
+         return (List<T>) executeWithNativeSession(new HibernateSearchCallback() {
+
+            @Override
+            public Object doInHibernate(Session session) throws HibernateException {
+                MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, new StandardAnalyzer());
+                try {
+                    org.apache.lucene.search.Query q = parser.parse(searchText);
+                    FullTextSession s = Search.getFullTextSession(session);
+
+                    FullTextQuery ftq = s.createFullTextQuery(q, classes);
+                    for (FilterConfig fc : filters) {
+                        FullTextFilter filter = ftq.enableFullTextFilter(fc.getFilterName());
+
+                        for (Map.Entry<String, Object> entry : fc.getParameters().entrySet()) {
+                            filter.setParameter(entry.getKey(), entry.getValue());
+                        }
+                    }
+                    return ftq.list();
+
+                } catch (ParseException e) {
+                    logger.error(e.getMessage(), e);
+                    throw new HibernateException(e);
+                }
+            }
+        });
     }
 
     /**

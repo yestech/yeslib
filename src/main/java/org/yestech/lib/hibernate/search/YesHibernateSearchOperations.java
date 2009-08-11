@@ -37,4 +37,6 @@ public interface YesHibernateSearchOperations {
     <T> List<T> search(String searchText, Class[] searchClass, String... fields);
 
     <T> List<T> search(String searchText, Class[] searchClass, Analyzer analyzer, String... fields);
+
+    <T> List<T> search(String searchText, List<FilterConfig> filters, Class[] classes, String... fields);
 }
