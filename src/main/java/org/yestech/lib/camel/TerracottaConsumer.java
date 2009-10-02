@@ -11,30 +11,27 @@ import org.apache.camel.*;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
 import org.apache.camel.impl.ServiceSupport;
-import org.apache.camel.impl.converter.AsyncProcessorTypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terracotta.message.pipe.Pipe;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
+import org.apache.camel.util.concurrent.ExecutorServiceHelper;
 
 /**
- * A Consumer for the PIPE component.
  *
- * A component based on camel SEDA component.
+ * A {@link org.apache.camel.Consumer} which uses a Terracotta {@link Pipe} to pass the {@link org.apache.camel.Exchange}.
  */
 public class TerracottaConsumer extends ServiceSupport implements Consumer, Runnable {
     final private static Logger logger = LoggerFactory.getLogger(TerracottaConsumer.class);
 
     private TerracottaEndpoint endpoint;
-    private AsyncProcessor processor;
+    private Processor processor;
     private ExecutorService executor;
 
     public TerracottaConsumer(TerracottaEndpoint endpoint, Processor processor) {
         this.endpoint = endpoint;
-        this.processor = AsyncProcessorTypeConverter.convert(processor);
+        this.processor = processor;
     }
 
     @Override
@@ -58,10 +55,7 @@ public class TerracottaConsumer extends ServiceSupport implements Consumer, Runn
             if (exchange != null) {
                 if (isRunAllowed()) {
                     try {
-                        processor.process(exchange, new AsyncCallback() {
-                            public void done(boolean sync) {
-                            }
-                        });
+                        processor.process(exchange);
                     } catch (Exception e) {
                         logger.error("TerracottaConsumer pipe caught: " + e, e);
                     }
@@ -78,16 +72,9 @@ public class TerracottaConsumer extends ServiceSupport implements Consumer, Runn
     }
 
     protected void doStart() throws Exception {
-        int concurrentConsumers = endpoint.getConcurrentConsumers();
-        executor = Executors.newFixedThreadPool(concurrentConsumers, new ThreadFactory() {
-
-            public Thread newThread(Runnable runnable) {
-                Thread thread = new Thread(runnable, getThreadName(endpoint.getEndpointUri()));
-                thread.setDaemon(true);
-                return thread;
-            }
-        });
-        for (int i = 0; i < concurrentConsumers; i++) {
+        int poolSize = endpoint.getConcurrentConsumers();
+        executor = ExecutorServiceHelper.newFixedThreadPool(poolSize, endpoint.getEndpointUri(), true);
+        for (int i = 0; i < poolSize; i++) {
             executor.execute(this);
         }
         endpoint.onStarted(this);
