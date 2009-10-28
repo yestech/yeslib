@@ -39,7 +39,7 @@ public enum USStateEnum {
     NEW_HAMPSHIRE("NH"),
     NEW_JERSEY("NJ"),
     NEW_MEXICO("NM"),
-    NEVADO("NV"),
+    NEVADA("NV"),
     NEW_YORK("NY"),
     OHIO("OH"),
     OKLAHOMA("OK"),
