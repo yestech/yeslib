@@ -22,6 +22,7 @@ package org.yestech.lib.util;
 public class Pair<T1, T2> implements ITuple {
     private T1 first;
     private T2 second;
+    private static final long serialVersionUID = 5366420016223666321L;
 
     public Pair() {
     }
