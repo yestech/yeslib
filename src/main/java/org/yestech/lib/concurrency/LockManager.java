@@ -22,8 +22,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class LockManager {
     final private static LockManager instance = new LockManager();
     final private static ConcurrentMap<String, Object> locks = new ConcurrentHashMap<String, Object>();
-//    final private ReentrantLock objectLock = new ReentrantLock();
-//    final private ReentrantLock readWriteLock = new ReentrantLock();
+    final private ReentrantLock objectLock = new ReentrantLock();
+    final private ReentrantLock readWriteLock = new ReentrantLock();
 
     /**
      * Creates or retrieve a previous lock associated with the key.
@@ -59,24 +59,30 @@ public class LockManager {
 
     private <L> L createReadWriteLock(String key) {
         L lock;
-        synchronized (key) {
+        try {
+            readWriteLock.lock();
             lock = (L) locks.get(key);
             if (lock == null) {
                 lock = (L) new ReentrantReadWriteLock();
                 locks.put(key, lock);
             }
+        } finally {
+            readWriteLock.unlock();
         }
         return lock;
     }
 
     private <L> L createObjectLock(String key) {
         L lock;
-        synchronized (key) {
+        try {
+            objectLock.lock();
             lock = (L) locks.get(key);
             if (lock == null) {
                 lock = (L) new ReentrantLock();
                 locks.put(key, lock);
             }
+        } finally {
+            objectLock.unlock();
         }
         return lock;
     }
