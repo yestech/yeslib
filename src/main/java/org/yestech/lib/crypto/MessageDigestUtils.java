@@ -51,6 +51,34 @@ public class MessageDigestUtils {
     }
 
     /**
+     * Take a string and return its md5 MD5hash as a byte array
+     *
+     * @param arg
+     * @return the MD5
+     */
+    public static byte[] md5HashToByte(String arg) {
+        if (arg != null) {
+            return DigestUtils.md5(arg);
+        } else {
+            return new byte[0];
+        }
+    }
+
+    /**
+     * Take a string and return its md5 MD5hash as a byte array
+     *
+     * @param arg
+     * @return the MD5
+     */
+    public static byte[] md5HashToByte(byte[] arg) {
+        if (arg != null) {
+            return DigestUtils.md5(arg);
+        } else {
+            return new byte[0];
+        }
+    }
+
+    /**
      * Take a file  and return its md5 MD5hash as a 32 hex digit string. If the file is null then a null hash is returned.
      *
      * @param file
