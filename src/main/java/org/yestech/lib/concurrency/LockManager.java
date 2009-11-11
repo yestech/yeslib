@@ -39,14 +39,14 @@ public class LockManager {
         } else {
             lock = (L) locks.get(key);
             if (lock == null) {
-                lock = instance.retrieveLock(key, type);
+                lock = (L)instance.retrieveLock(key, type);
             }
         }
         return lock;
     }
 
-    private <L> L retrieveLock(String key, LockType type) {
-        L lock;
+    private Object retrieveLock(String key, LockType type) {
+        Object lock;
         if (LockType.OBJECT.equals(type)) {
             lock = createObjectLock(key);
         } else if (LockType.READ_WRITE.equals(type)) {
@@ -57,13 +57,13 @@ public class LockManager {
         return lock;
     }
 
-    private <L> L createReadWriteLock(String key) {
-        L lock;
+    private Object createReadWriteLock(String key) {
+        Object lock;
         try {
             readWriteLock.lock();
-            lock = (L) locks.get(key);
+            lock = locks.get(key);
             if (lock == null) {
-                lock = (L) new ReentrantReadWriteLock();
+                lock = new ReentrantReadWriteLock();
                 locks.put(key, lock);
             }
         } finally {
@@ -72,13 +72,13 @@ public class LockManager {
         return lock;
     }
 
-    private <L> L createObjectLock(String key) {
-        L lock;
+    private Object createObjectLock(String key) {
+        Object lock;
         try {
             objectLock.lock();
-            lock = (L) locks.get(key);
+            lock = locks.get(key);
             if (lock == null) {
-                lock = (L) new ReentrantLock();
+                lock = new ReentrantLock();
                 locks.put(key, lock);
             }
         } finally {
