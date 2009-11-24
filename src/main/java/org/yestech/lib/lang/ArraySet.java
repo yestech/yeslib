@@ -17,12 +17,13 @@ import java.util.Set;
 
 /**
  * Implmentation of a {@link java.util.Set} backed by an {@link java.util.ArrayList}.
- *
  */
+@SuppressWarnings("unchecked")
 public class ArraySet<E> extends AbstractSet<E> implements Set<E>,
         Cloneable, Serializable {
 
     private ArrayList<E> backingList;
+    private static final long serialVersionUID = -5368378347244918125L;
 
     public ArraySet() {
         this(0);
@@ -48,6 +49,7 @@ public class ArraySet<E> extends AbstractSet<E> implements Set<E>,
      *
      * @return an iterator over the elements contained in this collection.
      */
+    @Override
     public Iterator<E> iterator() {
         return backingList.listIterator();
     }
@@ -59,6 +61,7 @@ public class ArraySet<E> extends AbstractSet<E> implements Set<E>,
      *
      * @return the number of elements in this collection.
      */
+    @Override
     public int size() {
         return backingList.size();
     }
@@ -68,6 +71,7 @@ public class ArraySet<E> extends AbstractSet<E> implements Set<E>,
      *
      * @return <tt>true</tt> if this set contains no elements.
      */
+    @Override
     public boolean isEmpty() {
         return backingList.isEmpty();
     }
@@ -78,6 +82,7 @@ public class ArraySet<E> extends AbstractSet<E> implements Set<E>,
      * @param o element whose presence in this set is to be tested.
      * @return <tt>true</tt> if this set contains the specified element.
      */
+    @Override
     public boolean contains(Object o) {
         return backingList.contains(o);
     }
@@ -88,8 +93,9 @@ public class ArraySet<E> extends AbstractSet<E> implements Set<E>,
      *
      * @param o element to be added to this set.
      * @return <tt>true</tt> if the set did not already contain the specified
-     * element.
+     *         element.
      */
+    @Override
     public boolean add(E o) {
         boolean found = contains(o);
         if (!found) {
@@ -104,6 +110,7 @@ public class ArraySet<E> extends AbstractSet<E> implements Set<E>,
      * @param o object to be removed from this set, if present.
      * @return <tt>true</tt> if the set contained the specified element.
      */
+    @Override
     public boolean remove(Object o) {
         boolean found = contains(o);
         if (found) {
@@ -115,6 +122,7 @@ public class ArraySet<E> extends AbstractSet<E> implements Set<E>,
     /**
      * Removes all of the elements from this set.
      */
+    @Override
     public void clear() {
         backingList.clear();
     }
@@ -125,14 +133,11 @@ public class ArraySet<E> extends AbstractSet<E> implements Set<E>,
      *
      * @return a shallow copy of this set.
      */
-    public Object clone() {
-        try {
-            ArraySet newSet = (ArraySet) super.clone();
-            newSet.backingList = (ArrayList<Object>) backingList.clone();
-            return newSet;
-        } catch (CloneNotSupportedException e) {
-            throw new InternalError();
-        }
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        ArraySet newSet = (ArraySet) super.clone();
+        newSet.backingList = (ArrayList<Object>) backingList.clone();
+        return newSet;
     }
 
     /**
@@ -140,8 +145,8 @@ public class ArraySet<E> extends AbstractSet<E> implements Set<E>,
      * serialize this set).
      *
      * @serialData The size of the set (the number of elements it contains)
-     *		   (int), followed by all of its elements (each an Object) in
-     *             no particular order.
+     * (int), followed by all of its elements (each an Object) in
+     * no particular order.
      */
     private synchronized void writeObject(java.io.ObjectOutputStream s)
             throws java.io.IOException {
@@ -171,7 +176,7 @@ public class ArraySet<E> extends AbstractSet<E> implements Set<E>,
 
         // Read in all elements in the proper order.
         for (int i = 0; i < size; i++) {
-            E e = (E)s.readObject();
+            E e = (E) s.readObject();
             backingList.add(e);
         }
     }
