@@ -7,7 +7,10 @@
     <version>1.2.0-SNAPSHOT</version>
     <name>YES Library</name>
     <url>http://yestech.org/sites/yeslib/</url>
-    <description></description>
+    <description>A collection of classes that can be used across yestech artifacts/components, but must not be dependant
+    on any yestech component.  Most of the code is utility type code.  When more than a few classes are
+    found to be in a package or the package start to handle more that a few reposibilities then a new
+        independant component is created and the existing code in yeslib is ported to the new component.</description>
     <parent>
         <groupId>org.yestech</groupId>
         <artifactId>yessuperpom</artifactId>
