@@ -21,6 +21,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @SuppressWarnings("unchecked")
 public class LockManager {
     final private static LockManager instance = new LockManager();
+    //TODO:  use a try cache that can persist to disk and expire old locks
     final private static ConcurrentMap<String, Object> locks = new ConcurrentHashMap<String, Object>();
     final private ReentrantLock objectLock = new ReentrantLock();
     final private ReentrantLock readWriteLock = new ReentrantLock();
