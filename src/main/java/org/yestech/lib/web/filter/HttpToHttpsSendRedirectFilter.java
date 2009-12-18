@@ -48,9 +48,6 @@ public class HttpToHttpsSendRedirectFilter implements Filter {
 
     /**
      * A simple HttpServletReponse that overrides {@link #sendRedirect(String)}.
-     *
-     * @author Artie Copeland
-     * @version $Revision: $
      */
     private static class SendRedirectOverloadedResponse extends HttpServletResponseWrapper {
         final private static Logger logger = LoggerFactory.getLogger(SendRedirectOverloadedResponse.class);
