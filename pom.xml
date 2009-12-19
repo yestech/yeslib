@@ -86,6 +86,7 @@
                     <artifactId>slf4j-simple</artifactId>
                 </exclusion>
             </exclusions>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.hazelcast</groupId>
