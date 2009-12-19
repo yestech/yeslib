@@ -23,6 +23,7 @@ public class Triple<T1, T2, T3> implements ITuple {
     private T1 first;
     private T2 second;
     private T3 third;
+    private static final long serialVersionUID = -3852173215308533511L;
 
     public Triple() {
     }

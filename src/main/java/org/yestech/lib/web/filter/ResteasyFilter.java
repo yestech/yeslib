@@ -11,6 +11,7 @@ package org.yestech.lib.web.filter;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yestech.lib.io.AutoFlushingPrintWriter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
@@ -145,14 +146,15 @@ public class ResteasyFilter implements Filter {
         }
 
         /**
-         * This actually translates the call to getOutputStream()
+         * This actually translates the call to getOutputStream().
+         *
+         * This is used by JSPs so for some reason unless we flush after the write it doesnt get added to the stream.
          */
         @Override
         public PrintWriter getWriter() throws IOException {
-            return new PrintWriter(this.getOutputStream());
+            return new AutoFlushingPrintWriter(super.getOutputStream());
         }
 
-        /** */
         @Override
         public ServletOutputStream getOutputStream() throws IOException {
             if (logger.isDebugEnabled())
@@ -164,9 +166,6 @@ public class ResteasyFilter implements Filter {
                 return super.getOutputStream();
         }
 
-        /**
-         *
-         */
         public boolean isShunted() {
             return this.shunted;
         }
@@ -176,7 +175,7 @@ public class ResteasyFilter implements Filter {
      */
     public void init(final FilterConfig config) throws ServletException {
         // Allow us to override the specific class for the servlet
-        String servletClassName = (String) config.getInitParameter("resteasy.servlet.class");
+        String servletClassName = config.getInitParameter("resteasy.servlet.class");
         if (servletClassName == null) {
             this.resteasyServlet = new HttpServletDispatcher();
         } else {
