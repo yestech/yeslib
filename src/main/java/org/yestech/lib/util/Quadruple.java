@@ -24,6 +24,7 @@ public class Quadruple<T1, T2, T3, T4> implements ITuple {
     private T2 second;
     private T3 third;
     private T4 fourth;
+    private static final long serialVersionUID = -1815154910139794476L;
 
     public Quadruple() {
     }
