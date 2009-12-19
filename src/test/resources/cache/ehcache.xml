@@ -1,0 +1,26 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="false" name="geoservice-cache">
+
+    <defaultCache
+            maxElementsInMemory="10"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"
+            diskSpoolBufferSizeMB="30"
+            maxElementsOnDisk="100"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
+            />
+
+    <cache name="testcache"
+           maxElementsInMemory="20000"
+           eternal="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="240"
+           memoryStoreEvictionPolicy="LRU"
+           overflowToDisk="false"
+           diskPersistent="false"
+            />
+</ehcache>

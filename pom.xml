@@ -50,6 +50,14 @@
                 <role>developer</role>
             </roles>
         </developer>
+        <developer>
+            <id>crowtopia</id>
+            <name>Greg Crow</name>
+            <email>crowos@gmail.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
     </developers>
     <properties>
         <tim.pipes.version>2.1.0</tim.pipes.version>

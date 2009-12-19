@@ -16,6 +16,7 @@ package org.yestech.lib.ibatis;
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.cache.CacheController;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Properties;
 
@@ -24,6 +25,7 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 
 /**
@@ -97,11 +99,29 @@ public class EhCacheController implements CacheController {
 
     /**
      * Configure a cache controller. Initialize the EH Cache Manager as a singleton.
+     * This method will first check the file system for your ehcache config file. If not found,
+     * it will then check on the classpath based on your configFile property.
+     * <p>
+     * Example of configFile property:
+     * /cache/ehcache.xml - If found on file system, it will load, if not the classpath will check.
+     * </p>
+     *
      * @param props - the properties object continaing configuration information.
      */
     public void setProperties(Properties props) {
-        URL url = getClass().getResource(props.getProperty("configFile"));
-        cacheManager = CacheManager.create(url);
+        Assert.notNull(props, "props must be set for this to work!");
+        Assert.notNull(props.getProperty("configFile"), "configFile must not be null in your properties!");
+        Assert.hasLength(props.getProperty("configFile"), "configFile property can not be empty!");
+
+        String configFile = props.getProperty("configFile");
+        File file = new File(configFile);
+        if(file.exists()) {
+            cacheManager = CacheManager.create(file.getAbsolutePath());
+        }
+        else {
+            URL url = getClass().getResource(configFile);
+            cacheManager = CacheManager.create(url);
+        }
     }
 
     /**
