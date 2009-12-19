@@ -20,8 +20,6 @@ import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.apache.commons.lang.BooleanUtils;
-
 /**
  * @author Artie Copeland
  * @version $Revision: $
