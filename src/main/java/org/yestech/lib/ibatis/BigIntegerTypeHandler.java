@@ -45,12 +45,12 @@ public class BigIntegerTypeHandler implements TypeHandlerCallback {
 
     public void setParameter(ParameterSetter setter, Object parameter)
             throws SQLException {
-        if (parameter == null) {
-            setter.setNull(Types.BIGINT);
-        }
-        else {
+        if (parameter != null && parameter instanceof BigInteger) {
             BigInteger i = (BigInteger) parameter;
             setter.setBigDecimal(new BigDecimal(i));
+        }
+        else {
+            setter.setNull(Types.BIGINT);
         }
     }
 
