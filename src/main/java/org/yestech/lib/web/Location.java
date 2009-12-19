@@ -8,6 +8,8 @@
 
 package org.yestech.lib.web;
 
+import static org.yestech.lib.web.IResteasyResult.DEFAULT_MODEL_KEY;
+
 import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -32,5 +34,5 @@ public @interface Location {
      *
      * @return The key
      */
-    String modelKey() default "__yestech_location_key__";
+    String modelKey() default DEFAULT_MODEL_KEY;
 }

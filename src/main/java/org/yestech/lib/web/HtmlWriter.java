@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.yestech.lib.web.Location;
+import org.yestech.lib.util.AnnotationUtil;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,14 +37,14 @@ import java.lang.reflect.Type;
  * <br/>
  * Note:
  * depending how you have resteasy configured. unless your method has a return type that isn't on this list:
- * 	 <ul>
- *      <li>java.lang.String</li>
- *      <li>java.io.InputStream</li>
- *      <li>javax.activation.DataSource</li>
- *      <li>java.io.File</li>
- *      <li>byte[]</li>
- *   </ul>
- *   Resteasy wont execute this Producer. 
+ * <ul>
+ * <li>java.lang.String</li>
+ * <li>java.io.InputStream</li>
+ * <li>javax.activation.DataSource</li>
+ * <li>java.io.File</li>
+ * <li>byte[]</li>
+ * </ul>
+ * Resteasy wont execute this Producer.
  */
 @SuppressWarnings("unchecked")
 @Provider
@@ -74,21 +76,16 @@ public class HtmlWriter implements MessageBodyWriter {
         HttpServletRequest request = ResteasyProviderFactory.getContextData(HttpServletRequest.class);
         HttpServletResponse response = ResteasyProviderFactory.getContextData(HttpServletResponse.class);
         try {
-            if (annotations != null) {
-                int totalAnnotations = annotations.length;
-                for (int i = 0; i < totalAnnotations; i++) {
-                    Annotation annotation = annotations[i];
-                    if (Location.class.equals(annotation.annotationType())) {
-                        Location location = (Location) annotation;
-                        if (obj != null) {
-                            request.setAttribute(location.modelKey(), obj);
-                        }
-                        RequestDispatcher requestDispatcher = request.getRequestDispatcher(location.value());
-
-                        requestDispatcher.forward(request, response);
-                    }
-                }
+            Location location = AnnotationUtil.getAnnotation(Location.class, annotations);
+            if (location == null || StringUtils.isBlank(location.value())) {
+                throw new RuntimeException("A Location annotation must be supplied and value must be supplied...");
             }
+            if (obj != null) {
+                request.setAttribute(location.modelKey(), obj);
+            }
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher(location.value());
+
+            requestDispatcher.forward(request, response);
         }
         catch (ServletException ex) {
             throw new WebApplicationException(ex);

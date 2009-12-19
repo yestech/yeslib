@@ -13,5 +13,6 @@ package org.yestech.lib.web;
  *
  */
 public interface IResteasyResult {
+    public final String DEFAULT_MODEL_KEY = "__yestech_location_key__";
     public final Object EMPTY = new Object();
 }
