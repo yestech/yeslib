@@ -17,11 +17,6 @@ import org.junit.Test;
  *
  */
 public class HashAlgorithmUnitTest {
-    @Before
-    public void setUp() {
-        // Add your code here
-    }
-
     @Test
     public void testCrcStringKey() {
         long hash = HashAlgorithm.CRC32_HASH.hash("this is my key");
