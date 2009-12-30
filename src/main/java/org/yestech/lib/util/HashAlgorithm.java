@@ -1,3 +1,10 @@
+/*
+ * Copyright LGPL3
+ * YES Technology Association
+ * http://yestech.org
+ *
+ * http://www.opensource.org/licenses/lgpl-3.0.html
+ */
 package org.yestech.lib.util;
 
 import static org.yestech.lib.crypto.MessageDigestUtils.md5HashToByte;
@@ -50,7 +57,7 @@ public enum HashAlgorithm {
      */
     FNV1A_32_HASH,
     /**
-     * MD5-based hash algorithm used by ketama.
+     * MD5-based hash algorithm used by ketama.  Best hash to use for {@link org.yestech.lib.util.ConsistentHash}.
      */
     KETAMA_HASH;
 
