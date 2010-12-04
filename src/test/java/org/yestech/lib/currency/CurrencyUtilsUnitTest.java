@@ -14,18 +14,17 @@
 package org.yestech.lib.currency;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import org.jmock.Mockery;
 
 import java.math.BigDecimal;
 import java.util.Locale;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Artie Copeland
  * @version $Revision: $
  */
 public class CurrencyUtilsUnitTest {
-    private Mockery context = new Mockery();
 
     @Test(expected = CurrencyException.class)
     public void testAddNullLeftSide() {
