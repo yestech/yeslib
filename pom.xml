@@ -68,7 +68,7 @@
         <tim-annotations.version>1.4.0</tim-annotations.version>
         <hazelcast.version>1.7.1</hazelcast.version>
         <resteasy.version>1.2.1.GA</resteasy.version>
-        <spring.version>2.5.6.SEC01</spring.version>
+        <spring.version>5.2.20.RELEASE</spring.version>
         <servlet.version>2.5</servlet.version>
         <jsp.version>2.0</jsp.version>
         <ehcache.version>2.2.0</ehcache.version>
